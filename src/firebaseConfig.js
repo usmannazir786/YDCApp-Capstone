@@ -7,7 +7,7 @@ const firebaseConfig = {
     projectId: "ydcapp-88a12",
     storageBucket: "ydcapp-88a12.appspot.com",
     messagingSenderId: "748831351097",
-    appId: "1:748831351097:web:9fdc23c68b3340001d88e8"
+    appId: "1:748831351097:android:b4889312b0d952721d88e8"
 };
 
 if (!firebase.apps.length) {
