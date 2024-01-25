@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "748831351097",
+    "project_id": "ydcapp-88a12",
+    "storage_bucket": "ydcapp-88a12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748831351097:android:b4889312b0d952721d88e8",
+        "android_client_info": {
+          "package_name": "com.ydcapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8F-KUm8vgAcz8NAZ-eiGx5cTkrRsxPv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
