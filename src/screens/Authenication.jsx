@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
-import firebase from './firebaseConfig';
+import firebase from '../firebaseConfig';
+
 
 const Auth = () => {
   const [email, setEmail] = useState('');
