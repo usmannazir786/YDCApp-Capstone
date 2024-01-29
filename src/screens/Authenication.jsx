@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
-import firebase from '../firebaseConfig';
+import firebase from '../../Firebase/firebaseConfig';
 
 
 const Auth = () => {
