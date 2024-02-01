@@ -1,0 +1,67 @@
+/* Vote.css */
+.vote-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .vote-header {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .back-arrow {
+    position: absolute;
+    left: 20px;
+    cursor: pointer;
+  }
+  
+  .vote-title {
+    text-align: center;
+  }
+  
+  .vote-item {
+    margin: 10px 0;
+    width: 100%;
+  }
+  
+  .vote-item h2 {
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .vote-button, .confirm-button {
+    background-color: #f0f0f0; /* Light grey */
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 5px;
+    width: 45%; /* Adjust to your preference */
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2); /* Simple box shadow */
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .vote-button.selected {
+    background-color: #d0d0d0; /* Different color for selected */
+  }
+  
+  .confirm-button {
+    background-color: #d0d0d0; /* Different color for confirm button */
+    width: 80%;
+    padding: 15px 0;
+  }
+  
+  .vote-button:hover, .confirm-button:hover {
+    background-color: #e6e6e6; /* Slightly darker on hover */
+  }
+  
+  .vote-button:active, .confirm-button:active {
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2); /* Smaller shadow for pressed effect */
+    transform: translateY(2px); /* Simulate button press */
+  }
+  

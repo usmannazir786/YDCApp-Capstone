@@ -1,0 +1,89 @@
+/* ChatScreen.css */
+.chat-screen-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Adjust height as needed, vh is just for full screen height */
+    background-color: #fff;
+  }
+  
+  .chat-screen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0; /* Light grey, adjust as needed */
+  }
+  
+  .chat-screen-title {
+    flex-grow: 1;
+    text-align: center;
+  }
+  
+  .back-arrow,
+  .chat-screen-options,
+  .send-message {
+    cursor: pointer;
+  }
+  
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .message.other {
+    flex-direction: row;
+  }
+  
+  .message.user {
+    flex-direction: row-reverse;
+  }
+  
+  .message-icon {
+    margin: 0 10px;
+  }
+  
+  .message-content {
+    max-width: 70%; /* Adjust width as needed */
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f0f0f0; /* Light grey, adjust for user message */
+  }
+  
+  .message.user .message-content {
+    background-color: #d0e0ff; /* Different color for user messages */
+  }
+  
+  .message-text {
+    margin-bottom: 5px;
+  }
+  
+  .message-date {
+    font-size: 0.8rem;
+    text-align: right;
+  }
+  
+  .chat-input-area {
+    display: flex;
+    padding: 10px;
+    background-color: #f0f0f0; /* Light grey, adjust as needed */
+  }
+  
+  .chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+  }
+  
+  .send-message {
+    /* Add styles for the send message icon */
+  }
+  

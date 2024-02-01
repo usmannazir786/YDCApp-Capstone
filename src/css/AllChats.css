@@ -1,0 +1,53 @@
+/* AllChats.css */
+.all-chats-container {
+    padding: 20px;
+    background-color: #fff; /* Replace with your desired background color */
+  }
+  
+  .all-chats-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .back-arrow,
+  .add-chat {
+    cursor: pointer;
+  }
+  
+  .all-chats-title {
+    text-align: center;
+  }
+  
+  .chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .chat-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+  }
+  
+  .chat-icon {
+    margin-right: 10px;
+    /* You can add styles for an icon here, such as a background image, etc. */
+  }
+  
+  .chat-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-name {
+    font-weight: bold;
+  }
+  
+  .chat-last-message {
+    color: #666; /* Lighter text color for the last message */
+  }
+  
