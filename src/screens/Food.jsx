@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, addDoc } from 'firebase/firestore/lite';
 
 const FoodInput = () => {
     
-    /*const [food, setFood] = useState('');
+    const [food, setFood] = useState('');
 
     const handleAddFood = async () => {
         try {
@@ -16,19 +16,16 @@ const FoodInput = () => {
         } catch (e) {
             console.error("Error adding food: ", e);
         }
-    };*/
-
-    const handleAddFood = async () => {
-        const foodCol = collection(db, 'food');
-        const foodSnapshot = await getDocs(foodCol);
-        const foodList = foodSnapshot.docs.map(doc => doc.data());
-
-        console.log(foodList);
-
     };
+
+    
     return (
         <View>
-            
+            <TextInput
+                placeholder="Enter food"
+                value={food}
+                onChangeText={setFood}
+            />
             <Button
                 title="Add Food"
                 onPress={handleAddFood}
