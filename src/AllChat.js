@@ -7,25 +7,28 @@ function AllChats() {
   const chatPlaceholders = Array(8).fill({ name: 'Placeholder', message: 'Last message...' });
 
   return (
-    <div className="all-chats-container">
-      <div className="all-chats-header">
-        <span className="back-arrow">&#x3c;</span>
-        <h1 className="all-chats-title">Chats</h1>
-        <span className="add-chat">&#x271A;</span>
-      </div>
-      <ul className="chat-list">
+    <View style={styles.allChatsContainer}>
+      <View style={styles.allChatsHeader}>
+        <TouchableOpacity>
+          <Text style={styles.backArrow}>&#x3c;</Text>
+        </TouchableOpacity>
+        <Text style={styles.allChatsTitle}>Chats</Text>
+        <TouchableOpacity>
+          <Text style={styles.addChat}>&#x271A;</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView>
         {chatPlaceholders.map((chat, index) => (
-          <li key={index} className="chat-item">
-            <span className="chat-icon">@</span>
-            <div className="chat-info">
-              <span className="chat-name">{chat.name}</span>
-              <span className="chat-last-message">{chat.message}</span>
-            </div>
-          </li>
+          <View key={index} style={styles.chatItem}>
+            <Text style={styles.chatIcon}>@</Text>
+            <View style={styles.chatInfo}>
+              <Text style={styles.chatName}>{chat.name}</Text>
+              <Text style={styles.chatLastMessage}>{chat.message}</Text>
+            </View>
+          </View>
         ))}
-      </ul>
-    </div>
+      </ScrollView>
+    </View>
   );
 }
-
 export default AllChats;
