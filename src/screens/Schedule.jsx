@@ -16,8 +16,7 @@ import { Card } from 'react-native-paper';
 /*
     Using moment to format dates
 */
-import moment, { Moment } from 'moment';
-import { format } from 'date-fns';
+import moment from 'moment';
 
 const Schedule = () => {
     const [items, setItems] = useState([]);
@@ -60,7 +59,8 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
             if (!items[strTime]) {
               items[strTime] = [];
               
-              //Creates item will be replaced with the ability for the admin to create stuff here
+              //Creates item to be placed in the schedule
+              // will be replaced with the ability for the admin to create stuff here
               const numItems = Math.floor(Math.random() * 3 + 1);
               for (let j = 0; j < numItems; j++) {
                 items[strTime].push({
@@ -72,6 +72,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
             }
           }
           
+          //Iterates over the item array and replaces any new items placed in and updates the array
           const newItems = {};
           Object.keys(items).forEach(key => {
             newItems[key] = items[key];
