@@ -5,10 +5,11 @@ import {
     View
 } from 'react-native';
 import Schedule from './src/screens/Schedule';
+import Home from './src/screens/HomeScreen';
 
 const App = () => {
     return (
-        <Schedule/>
+        <Home/>
     );
 };
 
