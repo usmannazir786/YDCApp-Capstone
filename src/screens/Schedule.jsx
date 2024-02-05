@@ -17,6 +17,7 @@ import { Card } from 'react-native-paper';
     Using moment to format dates
 */
 import moment from 'moment';
+//https://www.youtube.com/watch?v=RdaQIkE47Og&t=803s&ab_channel=JonasGr%C3%B8ndahl -- Agenda guide
 
 const Schedule = () => {
     const [items, setItems] = useState([]);
