@@ -30,13 +30,20 @@ function ChatScreen() {
       </View>
 
       <FlatList
-        data={messages}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          // Here you would render each message
-        )}
-        style={styles.messagesList}
-      />
+  data={messages}
+  keyExtractor={(item, index) => index.toString()}
+  renderItem={({ item }) => {
+    // Here you would render each message
+    // For example:
+    return (
+      <View style={styles.messageItem}>
+        <Text>{item.text}</Text>
+      </View>
+    );
+  }}
+  style={styles.messagesList}
+/>
+
 
       <View style={styles.inputContainer}>
         <TextInput
