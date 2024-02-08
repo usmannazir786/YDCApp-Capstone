@@ -6,6 +6,7 @@ import {
     View,
     SafeAreaView,
     Modal,
+    Button,
 } from 'react-native';
 /*
     Using a library that created agendas already from: https://github.com/wix/react-native-calendars
@@ -25,22 +26,13 @@ import moment from 'moment';
 */
 import { db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc } from 'firebase/firestore/lite';
-/* 
-    Imports for a library that handles checking for outside clicking: https://github.com/jakex7/react-native-click-outside --SO NAYCE--
-*/
-import { ClickOutsideProvider, useClickOutside } from 'react-native-click-outside';
-//Video reference for button smooth: https://www.youtube.com/watch?v=HfZ7pdhS43s&ab_channel=TK
 
 const Schedule = () => {
     const [items, setItems] = useState([]);
     const [currDate, setCurrDate] = useState(new Date());
     //States for schedule button
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
-
-    const screenRef = useClickOutside<SafeAreaView>(() => {
-
-    });
-
+    
 //Creating a new function that keeps checking for the current date
     useEffect(() => {
         //Calculates time until midnight
@@ -105,6 +97,8 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       const test = async () => {
         const itemsRef = collection(db, 'schedule');
         const docRef = await addDoc(itemsRef, { name: "works" });
+
+        setRegisterModalStatus(false);
       }
 
 //Renders the card in for the renderItem option
@@ -124,29 +118,45 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
     return (
-        <ClickOutsideProvider>
-            <SafeAreaView style={styles.container} useRef={screenRef}>
-                <Agenda
-                items={items}
+        
+        <SafeAreaView style={styles.container}>
+            <Agenda
+            items={items}
                 loadItemsForMonth={loadItems}
                 selected={formatDate}
                 renderItem={renderItem}
                 />
-                <Modal visible={registerModalStatus} animationType='slider'>
-                    <View>
-                        <Text>Gang</Text>
+                <Modal visible={registerModalStatus} animationType='slide' transparent={true}>
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        height: '50%',
+                        paddingTop: 600
+                    }} onPress={test}>
+                        <View style={{
+                            backgroundColor: 'white',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 15,
+                            width: '60%',
+                            height: '60%',
+                            borderRadius: 10,
+                        }}>
+                            <TouchableOpacity style={styles.registerBtn} onPress={test}>
+                                <Text style={{
+                                    color: '#f0efed',
+                                    fontSize: 15,
+                                    fontWeight: 'bold'
+                                }}>
+                                    Register
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </Modal>
             </SafeAreaView>
-        </ClickOutsideProvider>
-    );
-}
-
-const ScheduleButton = () => {
-    return (
-        <TouchableOpacity>
-            <Text>Register</Text>
-        </TouchableOpacity>
     );
 }
 
@@ -159,9 +169,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    button: {
-
-    },
+    registerBtn: {
+        backgroundColor: '#2196F3',
+        borderRadius: 10,
+        padding: 10,
+        width: 150,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });
 
 export default Schedule;
