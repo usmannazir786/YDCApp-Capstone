@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, Text, FlatList } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc } from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs } from 'firebase/firestore/lite';
 
 const FoodInput = () => {
     
     const [food, setFood] = useState('');
+    const [foodList, setFoodList] = useState([]);
 
     const handleAddFood = async () => {
         try {
@@ -18,6 +19,17 @@ const FoodInput = () => {
         }
     };
 
+
+    useEffect(() => {
+        const fetchFood = async () => {
+          const foodCollection = collection(db, 'food');
+          const foodSnapshot = await getDocs(foodCollection);
+          const foodList = foodSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+          setFoodList(foodList);
+        };
+    
+        fetchFood();
+      }, []);
     
     return (
         <View>
@@ -30,6 +42,11 @@ const FoodInput = () => {
                 title="Add Food"
                 onPress={handleAddFood}
             />
+            <FlatList
+        data={foodList}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => <Text>{item.food}</Text>}
+      />
         </View>
     );
 };
