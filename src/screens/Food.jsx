@@ -43,10 +43,13 @@ const FoodInput = () => {
                 onPress={handleAddFood}
             />
             <FlatList
-        data={foodList}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <Text>{item.food}</Text>}
-      />
+                data={foodList}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <Text>{item.name}</Text>
+                )}
+            />
+            
         </View>
     );
 };
