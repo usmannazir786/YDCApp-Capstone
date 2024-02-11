@@ -175,7 +175,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                         fontSize: 15,
                                         fontWeight: 'bold'
                                     }}>
-                                        Vince is gay
+                                        Event_Name
                                     </Text>
                                 </View>
                             </View>
