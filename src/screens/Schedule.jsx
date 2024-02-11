@@ -7,6 +7,7 @@ import {
     SafeAreaView,
     Modal,
     Button,
+    ScrollView,
 } from 'react-native';
 /*
     Using a library that created agendas already from: https://github.com/wix/react-native-calendars
@@ -30,8 +31,11 @@ import { collection, addDoc } from 'firebase/firestore/lite';
 const Schedule = () => {
     const [items, setItems] = useState([]);
     const [currDate, setCurrDate] = useState(new Date());
+    const [events, setEvents] = useState([]);
     //States for schedule button
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
+
+    let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
     
 //Creating a new function that keeps checking for the current date
     useEffect(() => {
@@ -98,6 +102,11 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         const itemsRef = collection(db, 'schedule');
         const docRef = await addDoc(itemsRef, { name: "works" });
 
+        closeModal();
+      }
+
+//Helper close function for modal
+      const closeModal = () => {
         setRegisterModalStatus(false);
       }
 
@@ -129,28 +138,96 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                 <Modal visible={registerModalStatus} animationType='slide' transparent={true}>
                     <View style={{
                         flex: 1,
+                        flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
                         backgroundColor: 'rgba(0,0,0,0.5)',
-                        height: '50%',
-                        paddingTop: 600
+                        paddingTop: 60,
+                        position: 'relative',
                     }} onPress={test}>
                         <View style={{
                             backgroundColor: 'white',
-                            justifyContent: 'center',
+                            justifyContent: 'bottom',
                             alignItems: 'center',
                             padding: 15,
                             width: '60%',
-                            height: '60%',
+                            height: '40%',
                             borderRadius: 10,
                         }}>
-                            <TouchableOpacity style={styles.registerBtn} onPress={test}>
+                            <View style={{
+                                backgroundColor: '#2e2d2b',
+                                width: 215,
+                                height: 190,
+                                borderRadius: 10,
+                                padding: 10,
+                                position: 'relative',
+                            }}>
+                                <View style={{
+                                    backgroundColor: '#f5d142',
+                                    width: 'auto',
+                                    height: 40,
+                                    borderRadius: 10,
+                                    padding: 10,
+                                    alignSelf: 'flex-start'
+                                }}>
+                                    <Text style={{
+                                        color: 'black',
+                                        fontSize: 15,
+                                        fontWeight: 'bold'
+                                    }}>
+                                        Vince is gay
+                                    </Text>
+                                </View>
+                            </View>
+                            <ScrollView centerContent={true} scrollEnabled={true}
+                            contentContainerStyle={{
+                                flex:1, 
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                            }}
+                            style={{
+                                position: 'absolute',
+                                backgroundColor: 'white',
+                                width: 195,
+                                height: 125,
+                                borderRadius: 10,
+                                padding: 10,
+                                alignSelf: 'flex-start',
+                                bottom: 85,
+                                left: 20
+                            }}>
+                                    <Text>{loremText}</Text>
+                            </ScrollView>
+                            <TouchableOpacity style={[styles.registerBtn, {
+                                width: 125,
+                                height: 50,
+                                position: 'absolute',
+                                left: 10,
+                                bottom: 10,
+                                backgroundColor: '#2196F3',
+                            }]} onPress={test}>
                                 <Text style={{
                                     color: '#f0efed',
                                     fontSize: 15,
                                     fontWeight: 'bold'
                                 }}>
                                     Register
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={closeModal} style={[styles.registerBtn, {
+                                backgroundColor: '#f54242',
+                                position: 'absolute',
+                                width: 75,
+                                height: 50,
+                                right: 10,
+                                bottom: 10,
+                            }]}>
+                                <Text style={{
+                                    color: '#f0efed',
+                                    fontSize: 15,
+                                    fontWeight: 'bold'
+                                }}>
+                                    Close
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -170,11 +247,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     registerBtn: {
-        backgroundColor: '#2196F3',
         borderRadius: 10,
         padding: 10,
-        width: 150,
-        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
     }
