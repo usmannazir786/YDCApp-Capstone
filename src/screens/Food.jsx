@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text, FlatList } from 'react-native';
+import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs } from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs, doc } from 'firebase/firestore/lite';
 
 const FoodInput = () => {
     
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
 
+    //Function to add food to the database
     const handleAddFood = async () => {
         try {
             const itemsRef = collection(db, 'food');
@@ -19,7 +20,9 @@ const FoodInput = () => {
         }
     };
 
-
+    //Function to fetch food from the database
+    //Adapted from CPRG 306 Week 10 lab
+    
     useEffect(() => {
         const fetchFood = async () => {
           const foodCollection = collection(db, 'food');
@@ -31,17 +34,19 @@ const FoodInput = () => {
         fetchFood();
       }, []);
     
+    
     return (
-        <View>
-            <TextInput
-                placeholder="Enter food"
+        <View  style={styles.container}>
+            <TextInput   
+                placeholder="Enter food here"
                 value={food}
                 onChangeText={setFood}
             />
-            <Button
-                title="Add Food"
-                onPress={handleAddFood}
-            />
+            <View style={styles.buttonBlock}>
+            <TouchableOpacity style={styles.button} onPress={handleAddFood}>
+            <Text>Enter Your Suggestion!</Text>
+            </TouchableOpacity>
+            </View>
             <FlatList
                 data={foodList}
                 keyExtractor={item => item.id}
@@ -53,5 +58,27 @@ const FoodInput = () => {
         </View>
     );
 };
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    buttonContainer: {
+        marginTop: 20, 
+        alignSelf: 'center',
+      },
+      buttonBlock: {
+        marginBottom: 20,
+        width: 200,
+        height: 50,
+        borderRadius: 15,
+        color: '#000000',
+        backgroundColor: '#DDDDDD',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 40,
+      }
+});
 
 export default FoodInput;
