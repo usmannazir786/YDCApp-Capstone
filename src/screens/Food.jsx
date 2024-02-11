@@ -14,6 +14,8 @@ const FoodInput = () => {
             const itemsRef = collection(db, 'food');
             const docRef = await addDoc(itemsRef, { name: food });
             console.log(`Food added with ID: ${docRef.id}`);
+            const newFoodItem = { id: docRef.id, name: food };
+            setFoodList(prevFoodList => [...prevFoodList, newFoodItem]);
             setFood('');
         } catch (e) {
             console.error("Error adding food: ", e);
