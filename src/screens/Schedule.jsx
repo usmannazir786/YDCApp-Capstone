@@ -26,7 +26,7 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs } from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs, getDoc } from 'firebase/firestore/lite';
 import { firebase } from '@react-native-firebase/auth';
 import uuid from 'react-native-uuid';
 
@@ -40,6 +40,7 @@ const Schedule = () => {
     const [events, setEvents] = useState([]);
     //States for schedule button
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
+    const [userRegister, setUserRegister] = useState(false);
 
     let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
     
@@ -121,15 +122,21 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
-    const checkRegistration = () => {
-        scheduleRef.once('value', (snapshot) => {
-            if (snapshot.exists()) {
-                return true;
+    useEffect(() => {
+        const checkRegistration = async () => {
+            const scheduleSnap = await getDocs(scheduleRef);
+            const scheduleDocs = scheduleSnap.docs;
+            setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
+            
+            if (scheduleDocs.length > 0) {
+                setUserRegister(true)
             } else {
-                return false;
+                setUserRegister(false)
             }
-        });
-    }
+        }
+
+        checkRegistration();
+    }, []);
  
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
@@ -219,8 +226,8 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                             }}>
                                     <Text>{loremText}</Text>
                             </ScrollView>
-                            {!checkRegistration ? 
-                                <TouchableOpacity style={[styles.registerBtn, {
+                            {!userRegister ? 
+                                (<TouchableOpacity style={[styles.registerBtn, {
                                     width: 125,
                                     height: 50,
                                     position: 'absolute',
@@ -235,9 +242,9 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                     }}>
                                         Register
                                     </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity>)
                                 :
-                                <View style={[styles.registerBtn, {
+                                (<View style={[styles.registerBtn, {
                                     width: 125,
                                     height: 50,
                                     position: 'absolute',
@@ -252,7 +259,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                     }}>
                                         Registered
                                     </Text>
-                                </View>
+                                </View>)
                             }
                             <TouchableOpacity onPress={closeModal} style={[styles.registerBtn, {
                                 backgroundColor: '#f54242',
