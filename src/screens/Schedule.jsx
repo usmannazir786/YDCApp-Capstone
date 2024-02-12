@@ -27,6 +27,7 @@ import moment from 'moment';
 */
 import { db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc } from 'firebase/firestore/lite';
+import { firebase } from '@react-native-firebase/auth';
 
 const Schedule = () => {
     const [items, setItems] = useState([]);
@@ -110,6 +111,11 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         setRegisterModalStatus(false);
       }
 
+//Retrieve data from firebase
+    const validateRegistration = () => {
+        
+    }
+ 
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
 
