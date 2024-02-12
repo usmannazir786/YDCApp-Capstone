@@ -5,10 +5,11 @@ import {
     View
 } from 'react-native';
 import Schedule from './src/screens/Schedule';
+import FoodInput from './src/screens/Food';
 
 const App = () => {
     return (
-        <Schedule/>
+        <FoodInput/>
     );
 };
 
