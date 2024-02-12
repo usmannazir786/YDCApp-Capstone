@@ -126,7 +126,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         const checkRegistration = async () => {
             const scheduleSnap = await getDocs(scheduleRef);
             const scheduleDocs = scheduleSnap.docs;
-            setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
+            //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
             
             if (scheduleDocs.length > 0) {
                 setUserRegister(true)
