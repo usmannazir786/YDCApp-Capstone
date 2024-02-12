@@ -8,13 +8,10 @@ function Home({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
         <View style={styles.buttonBlock}>
-          <Button title="PlaceHolder" onPress={() => navigation.navigate('')} color="DFD1AD" />
+          <Button title="Scheduler" onPress={() => navigation.navigate('Schedule')} color="DFD1AD" />
         </View>
         <View style={styles.buttonBlock}>
-          <Button title="Placeholder" onPress={() => navigation.navigate('')} color="DFD1AD" />
-        </View>
-        <View style={styles.buttonBlock}>
-          <Button title="Placeholder" onPress={() => navigation.navigate('')} color="DFD1AD" />
+          <Button title="Food" onPress={() => navigation.navigate('Food')} color="DFD1AD" />
         </View>
       </View>
     </SafeAreaView>
