@@ -14,14 +14,14 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
     return (
-        <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Youth Drop-In Center" component={HomePage} />
-        <Stack.Screen name="Schedule" component={Schedule} />
-        <Stack.Screen name="Food" component={FoodInput} />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Youth Drop-In Center" component={HomePage} />
+          <Stack.Screen name="Schedule" component={Schedule} />
+          <Stack.Screen name="Food" component={FoodInput} />
 
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
     );
 };
 

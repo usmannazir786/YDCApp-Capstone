@@ -26,11 +26,16 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc } from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs } from 'firebase/firestore/lite';
 import { firebase } from '@react-native-firebase/auth';
+import uuid from 'react-native-uuid';
 
 const Schedule = () => {
+    //Databse references
+    const scheduleRef = collection(db, 'schedule');
+    //Items for card
     const [items, setItems] = useState([]);
+    //Current date
     const [currDate, setCurrDate] = useState(new Date());
     const [events, setEvents] = useState([]);
     //States for schedule button
@@ -83,7 +88,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                 items[strTime].push({
                   name: 'Item for ' + strTime + ' #' + j,
                   height: Math.max(50, Math.floor(Math.random() * 150)),
-                  day: strTime
+                  day: strTime,
                 });
               }
             }
@@ -101,7 +106,11 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
 //Tester function to check if it sends into the database will use this for when the user actually registers themselves in
       const test = async () => {
         const itemsRef = collection(db, 'schedule');
-        const docRef = await addDoc(itemsRef, { name: "works" });
+        const docRef = await addDoc(itemsRef, 
+            { 
+                name: "works",
+                state: "registered",
+            });
 
         closeModal();
       }
@@ -112,8 +121,14 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
-    const validateRegistration = () => {
-        
+    const checkRegistration = () => {
+        scheduleRef.once('value', (snapshot) => {
+            if (snapshot.exists()) {
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
  
 //Renders the card in for the renderItem option
@@ -204,22 +219,41 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                             }}>
                                     <Text>{loremText}</Text>
                             </ScrollView>
-                            <TouchableOpacity style={[styles.registerBtn, {
-                                width: 125,
-                                height: 50,
-                                position: 'absolute',
-                                left: 10,
-                                bottom: 10,
-                                backgroundColor: '#2196F3',
-                            }]} onPress={test}>
-                                <Text style={{
-                                    color: '#f0efed',
-                                    fontSize: 15,
-                                    fontWeight: 'bold'
-                                }}>
-                                    Register
-                                </Text>
-                            </TouchableOpacity>
+                            {!checkRegistration ? 
+                                <TouchableOpacity style={[styles.registerBtn, {
+                                    width: 125,
+                                    height: 50,
+                                    position: 'absolute',
+                                    left: 10,
+                                    bottom: 10,
+                                    backgroundColor: '#2196F3',
+                                }]} onPress={test}>
+                                    <Text style={{
+                                        color: '#f0efed',
+                                        fontSize: 15,
+                                        fontWeight: 'bold'
+                                    }}>
+                                        Register
+                                    </Text>
+                                </TouchableOpacity>
+                                :
+                                <View style={[styles.registerBtn, {
+                                    width: 125,
+                                    height: 50,
+                                    position: 'absolute',
+                                    left: 10,
+                                    bottom: 10,
+                                    backgroundColor: '#2e2d2b',
+                                }]}>
+                                    <Text style={{
+                                        color: '#f0efed',
+                                        fontSize: 15,
+                                        fontWeight: 'bold'
+                                    }}>
+                                        Registered
+                                    </Text>
+                                </View>
+                            }
                             <TouchableOpacity onPress={closeModal} style={[styles.registerBtn, {
                                 backgroundColor: '#f54242',
                                 position: 'absolute',
