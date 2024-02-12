@@ -26,17 +26,12 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs } from 'firebase/firestore/lite';
-import { getDatabase } from 'firebase/database';
+import { collection, addDoc } from 'firebase/firestore/lite';
+import { firebase } from '@react-native-firebase/auth';
 
 const Schedule = () => {
-    //Database references
-    const scheduleRef = collection(db, 'schedule');
-    //Items is for the cards
     const [items, setItems] = useState([]);
-    //currDate is for checking the current Date
     const [currDate, setCurrDate] = useState(new Date());
-    //Events will be for the events that will be appearing
     const [events, setEvents] = useState([]);
     //States for schedule button
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
@@ -102,6 +97,24 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
           setItems(newItems);
         }, 1000);
       };
+
+//Tester function to check if it sends into the database will use this for when the user actually registers themselves in
+      const test = async () => {
+        const itemsRef = collection(db, 'schedule');
+        const docRef = await addDoc(itemsRef, { name: "works" });
+
+        closeModal();
+      }
+
+//Helper close function for modal
+      const closeModal = () => {
+        setRegisterModalStatus(false);
+      }
+
+//Retrieve data from firebase
+    const validateRegistration = () => {
+        
+    }
  
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
@@ -119,37 +132,11 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         </TouchableOpacity>)
       }
 
-//Tester function to check if it sends into the database will use this for when the user actually registers themselves in
-    const test = async () => {
-        const docRef = await addDoc(scheduleRef, { name: "works" });
-
-        closeModal();
-    }
-
-//Helper close function for modal
-  const closeModal = () => {
-    setRegisterModalStatus(false);
-  }
-
-//Making a new useEffect that handles retrieving data from the db regarding registration
-//   useEffect(() => {
-//     const fetchRegistration = async () => {
-//         const scheduleCollection = collection (db, 'schedule');
-//         const scheduleSnapshot = await getDocs(scheduleCollection);
-//         const scheduleList = scheduleSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
-//     }
-
-//     fetchRegistration();
-//   }, []);
-const scheduleRegistrationCheck = async () => {
-    const scheduleSnapshot = await getDocs(scheduleRef)
-}
-
     return (
         
         <SafeAreaView style={styles.container}>
             <Agenda
-                items={items}
+            items={items}
                 loadItemsForMonth={loadItems}
                 selected={formatDate}
                 renderItem={renderItem}
