@@ -194,7 +194,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                 padding: 10,
                                 alignSelf: 'flex-start',
                                 bottom: 85,
-                                left: 20
+                                left: 20,
                             }}>
                                     <Text>{loremText}</Text>
                             </ScrollView>
