@@ -5,11 +5,11 @@ function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('')}>
-          <Text style={styles.buttonText}>PlaceHolder</Text>
+        <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule')}>
+          <Text style={styles.buttonText}>Schedule</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('')}>
-          <Text style={styles.buttonText}>Placeholder</Text>
+        <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
+          <Text style={styles.buttonText}>Food</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('')}>
           <Text style={styles.buttonText}>Placeholder</Text>
@@ -29,6 +29,7 @@ function Home({ navigation }) {
       fontSize: 40,
       fontWeight: 'bold',
       marginBottom: 20,
+      fontFamily:'',
     },
     buttonContainer: {
       marginTop: 20, 
@@ -38,11 +39,12 @@ function Home({ navigation }) {
       width: 250,
       height: 100,
       borderRadius: 15,
-      color: '#000000',
+      color: '#FFFFFF',
       backgroundColor: '#DFD1AD',
       justifyContent: 'center',
       alignItems: 'center',
       fontSize: 40,
+      fontFamily:'',
   }});
 
 export default Home;
