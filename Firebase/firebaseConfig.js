@@ -1,6 +1,7 @@
-import {initializeApp} from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore/lite';
+import { initializeApp } from 'firebase/app'
+import {
+    getFirestore
+} from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBz-1JYWPWsPfTkbdenKi_n_Cmbvn7uBqU",
@@ -8,10 +9,9 @@ const firebaseConfig = {
     projectId: "ydcapp-88a12",
     storageBucket: "ydcapp-88a12.appspot.com",
     messagingSenderId: "748831351097",
-    appId: "1:748831351097:android:b4889312b0d952721d88e8"
-};
+    appId: "1:748831351097:web:9fdc23c68b3340001d88e8",
+    measurementId: "G-ZPH3TF4WNX"
+  };
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-//export const authentication = getAuth(app);
-
