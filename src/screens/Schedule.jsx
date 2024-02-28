@@ -121,10 +121,6 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
-    useEffect(() => {
-        
-    }, []);
- 
     onSnapshot(scheduleRef, (snapshot) => {
         const checkRegistration = async () => {
             const scheduleDocs = snapshot.docs;
