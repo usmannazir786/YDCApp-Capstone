@@ -43,7 +43,6 @@
     <string name="character_counter_overflowed_content_description">අනුලකුණු සීමාව %2$dකින් %1$d ඉක්ම විය</string>
     <string name="clear_text_end_icon_content_description">පෙළ හිස් කරන්න</string>
     <string gender="unknown" name="combobox_description">සංයුක්ත පෙට්ටිය</string>
-    <string name="common_google_play_services_unknown_issue">%1$s හට Google Play සේවා සමගින් ගැටලු ඇත. කරුණාකර නැවත උත්සාහ කරන්න.</string>
     <string name="error_icon_content_description">දෝෂය</string>
     <string name="exposed_dropdown_menu_content_description">පතන මෙනුව පෙන්වන්න</string>
     <string gender="unknown" name="header_description">සිරස්තලය</string>

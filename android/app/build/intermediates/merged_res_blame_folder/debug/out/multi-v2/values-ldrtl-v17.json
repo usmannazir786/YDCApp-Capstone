@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.ydcapp-mergeDebugResources-40:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "outputFile": "com.pleasework.app-mergeDebugResources-34:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\cdsar\\.gradle\\caches\\transforms-3\\cd2214c0cab9298ec2952acfb08c8033\\transformed\\material-1.9.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
+                    "source": "C:\\Users\\cdsar\\.gradle\\caches\\transforms-3\\d3a8a24834f295d8078f18b8298041f7\\transformed\\material-1.9.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

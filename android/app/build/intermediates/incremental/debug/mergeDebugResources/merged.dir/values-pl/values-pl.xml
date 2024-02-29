@@ -44,7 +44,6 @@
     <string name="character_counter_overflowed_content_description">Przekroczono limit znaków (%1$d z %2$d)</string>
     <string name="clear_text_end_icon_content_description">Wyczyść tekst</string>
     <string gender="unknown" name="combobox_description">Pole kombi</string>
-    <string name="common_google_play_services_unknown_issue">%1$s ma problem z dostępem do Usług Google Play. Spróbuj jeszcze raz.</string>
     <string name="error_icon_content_description">Błąd</string>
     <string name="exposed_dropdown_menu_content_description">Pokaż menu</string>
     <string gender="unknown" name="header_description">Nagłówek</string>

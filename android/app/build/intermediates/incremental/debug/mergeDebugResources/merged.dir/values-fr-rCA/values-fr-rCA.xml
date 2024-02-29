@@ -42,7 +42,6 @@
     <string name="character_counter_overflowed_content_description">Limite de caractère dépassée : %1$d sur %2$d</string>
     <string name="clear_text_end_icon_content_description">Effacer le texte</string>
     <string gender="unknown" name="combobox_description">Zone combinée</string>
-    <string name="common_google_play_services_unknown_issue">L\'application %1$s éprouve un problème avec les services Google Play. Veuillez réessayer.</string>
     <string name="error_icon_content_description">Erreur</string>
     <string name="exposed_dropdown_menu_content_description">Afficher le menu déroulant</string>
     <string gender="unknown" name="header_description">Titre</string>
