@@ -26,8 +26,9 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, getDoc, onSnapshot, snapshotEqual } from 'firebase/firestore';
-//import uuid from 'react-native-uuid';
+import { collection, addDoc, getDocs, getDoc } from 'firebase/firestore/lite';
+import { firebase } from '@react-native-firebase/auth';
+import uuid from 'react-native-uuid';
 
 const Schedule = () => {
     //Databse references
@@ -121,10 +122,17 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
+<<<<<<< HEAD
     onSnapshot(scheduleRef, (snapshot) => {
         const checkRegistration = async () => {
 
             const scheduleDocs = snapshot.docs;
+=======
+    useEffect(() => {
+        const checkRegistration = async () => {
+            const scheduleSnap = await getDocs(scheduleRef);
+            const scheduleDocs = scheduleSnap.docs;
+>>>>>>> parent of 092c09a (changed the files to the cleaned ones)
             //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
 
 
@@ -137,8 +145,8 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         }
 
         checkRegistration();
-    });
-
+    }, []);
+ 
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
 
