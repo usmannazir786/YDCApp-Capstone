@@ -123,8 +123,11 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
 //Retrieve data from firebase
     onSnapshot(scheduleRef, (snapshot) => {
         const checkRegistration = async () => {
+
             const scheduleDocs = snapshot.docs;
             //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
+
+
             
             if (scheduleDocs.length > 0) {
                 setUserRegister(true)
