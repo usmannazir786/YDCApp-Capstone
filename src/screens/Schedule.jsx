@@ -122,18 +122,14 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
-<<<<<<< HEAD
-    onSnapshot(scheduleRef, (snapshot) => {
-        const checkRegistration = async () => {
 
-            const scheduleDocs = snapshot.docs;
-=======
+
     useEffect(() => {
         const checkRegistration = async () => {
             const scheduleSnap = await getDocs(scheduleRef);
             const scheduleDocs = scheduleSnap.docs;
->>>>>>> parent of 092c09a (changed the files to the cleaned ones)
             //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
+            
 
 
             
