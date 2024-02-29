@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ydcapp-mergeDebugResources-43:/values-night-v8/values-night-v8.xml",
+            "outputFile": "com.ydcapp-mergeDebugResources-40:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
                     "source": "C:\\Users\\cdsar\\.gradle\\caches\\transforms-3\\56e06eb9195213d05a6e15eb53816247\\transformed\\appcompat-1.6.1\\res\\values-night-v8\\values-night-v8.xml",

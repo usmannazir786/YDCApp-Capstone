@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ydcapp-mergeDebugResources-43:/values-land/values-land.xml",
+            "outputFile": "com.ydcapp-mergeDebugResources-40:/values-land/values-land.xml",
             "map": [
                 {
                     "source": "C:\\Users\\cdsar\\.gradle\\caches\\transforms-3\\56e06eb9195213d05a6e15eb53816247\\transformed\\appcompat-1.6.1\\res\\values-land\\values-land.xml",

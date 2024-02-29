@@ -26,8 +26,8 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, getDoc } from 'firebase/firestore/lite';
-import { firebase } from '@react-native-firebase/auth';
+import { collection, addDoc, getDocs, getDoc, onSnapshot } from 'firebase/firestore';
+
 import uuid from 'react-native-uuid';
 
 const Schedule = () => {
@@ -122,6 +122,16 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
+      onSnapshot(scheduleRef, (querySnapshot) => {
+        const scheduleDocs = querySnapshot.docs;
+        //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
+            
+        if (scheduleDocs.length > 0) {
+            setUserRegister(true)
+        } else {
+            setUserRegister(false)
+        }
+      });
 
 
     useEffect(() => {

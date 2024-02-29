@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ydcapp-mergeDebugResources-43:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "outputFile": "com.ydcapp-mergeDebugResources-40:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
                     "source": "C:\\Users\\cdsar\\.gradle\\caches\\transforms-3\\cd2214c0cab9298ec2952acfb08c8033\\transformed\\material-1.9.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",

@@ -11,10 +11,6 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-// @react-native-firebase/app
-import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
-// @react-native-firebase/auth
-import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 // react-native-get-random-values
 import org.linusu.RNGetRandomValuesPackage;
 // react-native-pager-view
@@ -68,8 +64,6 @@ public class PackageList {
   public ArrayList<ReactPackage> getPackages() {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
-      new ReactNativeFirebaseAppPackage(),
-      new ReactNativeFirebaseAuthPackage(),
       new RNGetRandomValuesPackage(),
       new PagerViewPackage(),
       new SafeAreaContextPackage(),
