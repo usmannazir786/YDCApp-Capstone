@@ -5407,7 +5407,7 @@ metro-cache@0.80.6:
     metro-core "0.80.6"
     rimraf "^3.0.2"
 
-metro-config@^0.80.3, metro-config@0.80.6:
+metro-config@^0.80.3, metro-config@^0.80.6, metro-config@0.80.6:
   version "0.80.6"
   resolved "https://registry.npmjs.org/metro-config/-/metro-config-0.80.6.tgz"
   integrity sha512-vHYYvJpRTWYbmvqlR7i04xQpZCHJ6yfZ/xIcPdz2ssbdJGGJbiT1Aar9wr8RAhsccSxdJgfE5B1DB8Mo+DnhIg==
