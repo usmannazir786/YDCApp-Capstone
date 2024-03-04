@@ -9,6 +9,7 @@ import FoodInput from './src/screens/Food';
 import HomePage from './src/screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './src/screens/Login';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ const App = () => {
     return (
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Login Auth" component={Login}/>
           <Stack.Screen name="Youth Drop-In Center" component={HomePage} />
           <Stack.Screen name="Schedule" component={Schedule} />
           <Stack.Screen name="Food" component={FoodInput} />

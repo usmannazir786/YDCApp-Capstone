@@ -26,9 +26,9 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, getDoc, onSnapshot } from 'firebase/firestore';
-
-import uuid from 'react-native-uuid';
+import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
+//import { firebase } from '@react-native-firebase/auth';
+//import uuid from 'react-native-uuid';
 
 const Schedule = () => {
     //Databse references
@@ -122,10 +122,9 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
 //Retrieve data from firebase
-      onSnapshot(scheduleRef, (querySnapshot) => {
-        const scheduleDocs = querySnapshot.docs;
-        //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
-            
+      onSnapshot(scheduleRef, (snapshot) => {
+        const scheduleDocs = snapshot.docs;
+
         if (scheduleDocs.length > 0) {
             setUserRegister(true)
         } else {
@@ -133,25 +132,24 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         }
       });
 
-
-    useEffect(() => {
-        const checkRegistration = async () => {
-            const scheduleSnap = await getDocs(scheduleRef);
-            const scheduleDocs = scheduleSnap.docs;
-            //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
+    // useEffect(() => {
+    //     const checkRegistration = async () => {
+    //         const scheduleSnap = await getDocs(scheduleRef);
+    //         const scheduleDocs = scheduleSnap.docs;
+    //         //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
             
 
 
             
-            if (scheduleDocs.length > 0) {
-                setUserRegister(true)
-            } else {
-                setUserRegister(false)
-            }
-        }
+    //         if (scheduleDocs.length > 0) {
+    //             setUserRegister(true)
+    //         } else {
+    //             setUserRegister(false)
+    //         }
+    //     }
 
-        checkRegistration();
-    }, []);
+    //     checkRegistration();
+    // }, []);
  
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
