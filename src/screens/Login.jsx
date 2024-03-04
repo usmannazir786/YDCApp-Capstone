@@ -25,7 +25,7 @@ const Login = ({ navigation }) => {
       .then(user => console.log(user))
       .catch(error => setErrorMessage(error.message));
 
-      navigation.navigate('Home');
+      navigation.navigate('Youth Drop-In Center');
   };
 
   return (
