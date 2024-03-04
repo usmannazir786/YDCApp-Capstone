@@ -1,23 +1,31 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
-import firebase from '../../Firebase/firebaseConfig';
+import { firebase } from 'firebase/firestore';
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth';
+import { auth } from '../../Firebase/firebaseConfig';
 
 
-const Auth = () => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
 
+  //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then(user => console.log(user))
       .catch(error => setErrorMessage(error.message));
   };
 
   const handleLogin = () => {
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then(user => console.log(user))
       .catch(error => setErrorMessage(error.message));
+
+      navigation.navigate('Home');
   };
 
   return (
@@ -40,4 +48,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Login;
