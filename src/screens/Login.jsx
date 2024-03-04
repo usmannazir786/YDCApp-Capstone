@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../Firebase/firebaseConfig';
 
+//Tie information only related to the user to its uuid
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -22,10 +23,12 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(user => console.log(user))
+      .then(user => {
+        console.log(user)
+        navigation.navigate('Youth Drop-In Center');
+      })
       .catch(error => setErrorMessage(error.message));
 
-      navigation.navigate('Youth Drop-In Center');
   };
 
   return (

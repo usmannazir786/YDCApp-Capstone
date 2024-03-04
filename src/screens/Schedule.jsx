@@ -30,6 +30,8 @@ import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
 //import { firebase } from '@react-native-firebase/auth';
 //import uuid from 'react-native-uuid';
 
+//Have unique id's for each card to tie to the events
+
 const Schedule = () => {
     //Databse references
     const scheduleRef = collection(db, 'schedule');
