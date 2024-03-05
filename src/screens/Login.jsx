@@ -17,9 +17,8 @@ const Login = ({ navigation }) => {
 
   //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(user => console.log(user))
-      .catch(error => setErrorMessage(error.message));
+    //Sending email if it has been filled to the sign up page to save sign up time if an account does not exist
+    navigation.navigate('Signup Auth', {email});
   };
 
   const handleLogin = () => {
