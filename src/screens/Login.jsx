@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { TextInput, Button, Text } from 'react-native';
 import { firebase } from 'firebase/firestore';
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth';
 import { auth } from '../../Firebase/firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 //Tie information only related to the user to its uuid
 
@@ -32,7 +33,7 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <SafeAreaView>
       {errorMessage && <Text>{errorMessage}</Text>}
       <TextInput
         placeholder="Email"
@@ -47,7 +48,7 @@ const Login = ({ navigation }) => {
       />
       <Button title="Sign Up" onPress={handleSignUp} />
       <Button title="Login" onPress={handleLogin} />
-    </View>
+    </SafeAreaView>
   );
 };
 
