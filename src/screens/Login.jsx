@@ -45,8 +45,8 @@ const Login = ({ navigation }) => {
         autoCapitalize="none"
         onChangeText={password => setPassword(password)}
       />
-      <Button title="Sign Up" onPress={handleSignUp} />
       <Button title="Login" onPress={handleLogin} />
+      <Button title="Sign Up" onPress={handleSignUp} />
     </SafeAreaView>
   );
 };
