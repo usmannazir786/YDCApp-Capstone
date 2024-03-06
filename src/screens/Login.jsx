@@ -18,12 +18,14 @@ const Login = ({ navigation }) => {
   //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
     //Sending email if it has been filled to the sign up page to save sign up time if an account does not exist
+    setErrorMessage(null);
     navigation.navigate('Signup Auth', {email});
   };
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(user => {
+        setErrorMessage(null);
         console.log(user)
         navigation.navigate('Youth Drop-In Center');
       })
