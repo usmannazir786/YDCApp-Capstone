@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { TextInput, Button, Text } from 'react-native';
 import { firebase } from 'firebase/firestore';
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth';
 import { auth } from '../../Firebase/firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 //Tie information only related to the user to its uuid
 
@@ -16,14 +17,15 @@ const Login = ({ navigation }) => {
 
   //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(user => console.log(user))
-      .catch(error => setErrorMessage(error.message));
+    //Sending email if it has been filled to the sign up page to save sign up time if an account does not exist
+    setErrorMessage(null);
+    navigation.navigate('Signup Auth', {email});
   };
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(user => {
+        setErrorMessage(null);
         console.log(user)
         navigation.navigate('Youth Drop-In Center');
       })
@@ -32,7 +34,7 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <SafeAreaView>
       {errorMessage && <Text>{errorMessage}</Text>}
       <TextInput
         placeholder="Email"
@@ -45,9 +47,9 @@ const Login = ({ navigation }) => {
         autoCapitalize="none"
         onChangeText={password => setPassword(password)}
       />
-      <Button title="Sign Up" onPress={handleSignUp} />
       <Button title="Login" onPress={handleLogin} />
-    </View>
+      <Button title="Sign Up" onPress={handleSignUp} />
+    </SafeAreaView>
   );
 };
 
