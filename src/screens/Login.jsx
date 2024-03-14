@@ -23,13 +23,25 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
+    //Input validation for email and password
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /\s/; //Password input should not contain any spaces
+
+    if (!emailRegex.test(email) || !passwordRegex.test(password)) {
+      console.warn('User tried to enter suspicious text in one of the inputs: ', email, ', ', password);
+      setErrorMessage('Invalid email or password input');
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
       .then(user => {
         setErrorMessage(null);
-        console.log(user)
+        console.log(user);
         navigation.navigate('Youth Drop-In Center');
       })
-      .catch(error => setErrorMessage(error.message));
+      .catch(error => {
+        setErrorMessage(error.message);
+        console.log('Error when user trying to log in: ', error);
+      });
+    }
 
   };
 
