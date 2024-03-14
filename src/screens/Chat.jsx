@@ -17,7 +17,7 @@ const Chat = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
 
 
-  useEffect(() => {
+  useEffect(() => { 
     getAllMsg()
   },[]);
 
