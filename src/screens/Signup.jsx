@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../../Firebase/firebaseConfig';
-import { TextInput, Button, Alert } from 'react-native';
+import { Button, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection} from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
+import { IconButton, Icon, TextInput } from 'react-native-paper';
 
-const Signup = ({ route, navigation }) => {
+const Signup = ({ route, navigation, strength }) => {
     const [firstname, setFirstName] = useState('');
     const [lastname, setLastName] = useState('');
     const {email: initialEmail} = route.params;
     const [email, setEmail] = useState(initialEmail);
     const [password, setPassword] = useState('');
+    const [visible, setVisibile] = useState(false);
 
     //Creates both the email and password for the user as well as a user collection relating to additional user info
     const handleSignUp = () => {
@@ -111,10 +113,17 @@ const Signup = ({ route, navigation }) => {
                 value={email}
             />
             <TextInput
-                secureTextEntry
-                placeholder='Password'
+                secureTextEntry={!visible}
+                placeholder="Password"
                 autoCapitalize="none"
                 onChangeText={password => setPassword(password)}
+                right={
+                <TextInput.Icon 
+                    name="eye" //Not working
+                    size={20}
+                    onPress={() => setVisibile(!visible)}
+                />
+                }
             />
             <Button title="Sign Up" onPress={handleSignUp} />
         </SafeAreaView>

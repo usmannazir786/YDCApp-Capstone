@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, Button, Text } from 'react-native';
+import { Button, Text } from 'react-native';
 import { firebase } from 'firebase/firestore';
 import { 
   createUserWithEmailAndPassword,
@@ -7,6 +7,8 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../Firebase/firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TextInput, IconButton, Icon, MD3Colors } from 'react-native-paper';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Tie information only related to the user to its uuid
 
@@ -14,6 +16,7 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
+  const [visible, setVisibile] = useState(false);
 
   //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
@@ -54,10 +57,17 @@ const Login = ({ navigation }) => {
         onChangeText={email => setEmail(email)}
       />
       <TextInput
-        secureTextEntry
+        secureTextEntry={!visible}
         placeholder="Password"
         autoCapitalize="none"
         onChangeText={password => setPassword(password)}
+        right={
+          <TextInput.Icon 
+            name="eye" //Not working
+            size={20}
+            onPress={() => setVisibile(!visible)}
+          />
+        }
       />
       <Button title="Login" onPress={handleLogin} />
       <Button title="Sign Up" onPress={handleSignUp} />
