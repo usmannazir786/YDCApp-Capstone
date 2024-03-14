@@ -7,7 +7,7 @@ import { addDoc, collection} from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
 import { IconButton, Icon, TextInput } from 'react-native-paper';
 
-const Signup = ({ route, navigation, strength }) => {
+const Signup = ({ route, navigation }) => {
     const [firstname, setFirstName] = useState('');
     const [lastname, setLastName] = useState('');
     const {email: initialEmail} = route.params;
@@ -119,7 +119,7 @@ const Signup = ({ route, navigation, strength }) => {
                 onChangeText={password => setPassword(password)}
                 right={
                 <TextInput.Icon 
-                    name="eye" //Not working
+                    icon={!visible ? "eye" : "eye-off" }
                     size={20}
                     onPress={() => setVisibile(!visible)}
                 />

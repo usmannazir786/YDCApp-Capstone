@@ -63,7 +63,7 @@ const Login = ({ navigation }) => {
         onChangeText={password => setPassword(password)}
         right={
           <TextInput.Icon 
-            name="eye" //Not working
+            icon={!visible ? "eye" : "eye-off" }
             size={20}
             onPress={() => setVisibile(!visible)}
           />
