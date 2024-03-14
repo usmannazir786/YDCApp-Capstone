@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
+import Contacts from './src/screens/Contacts';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,7 @@ const App = () => {
           <Stack.Screen name="Schedule" component={Schedule} />
           <Stack.Screen name="Food" component={FoodInput} />
           <Stack.Screen name="Chat" component={Chat} />
-
+          <Stack.Screen name="Contacts" component={Contacts} />
         </Stack.Navigator>
       </NavigationContainer>
     );

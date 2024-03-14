@@ -20,6 +20,13 @@ function Home({ navigation }) {
           </TouchableOpacity>
         </View>
 
+
+        <View style={styles.buttonBlock}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Contacts')}>
+            <Text style={styles.title}>Contacts</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Chat', { chatId: '1111' })}>
             <Text style={styles.title}>Chat</Text>
