@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../../Firebase/firebaseConfig';
-import { Button, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection} from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
-import { IconButton, Icon, TextInput } from 'react-native-paper';
+import { TextInput, Button, } from 'react-native-paper';
 
 const Signup = ({ route, navigation }) => {
     const [firstname, setFirstName] = useState('');
@@ -21,6 +21,14 @@ const Signup = ({ route, navigation }) => {
         const firstNameRegex = /^[A-Za-z0-9\s]+$/;
         const lastNameRegex = /^[A-Za-z0-9\s]+$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        /*
+            At least one lowercase
+            At least one uppercase
+            At least one digit
+            At least one special character
+            At least 8 characters
+        */
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         //Booleans to check if each input is valid
         let fncheck = false;
@@ -125,7 +133,9 @@ const Signup = ({ route, navigation }) => {
                 />
                 }
             />
-            <Button title="Sign Up" onPress={handleSignUp} />
+            <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
+            <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
+
         </SafeAreaView>
     );
 };

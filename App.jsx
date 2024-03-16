@@ -21,12 +21,16 @@ const App = () => {
     return (
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
             <Stack.Screen name="Login Auth" component={Login}/>
             <Stack.Screen name="Signup Auth" component={Signup}/>
-            <Stack.Screen name="Youth Drop-In Center" component={HomePage} />
-            <Stack.Screen name="Schedule" component={Schedule} />
-            <Stack.Screen name="Food" component={FoodInput} />
+            <Stack.Screen name="Youth Drop-In Center" component={HomePage}/>
+            <Stack.Screen name="Schedule" component={Schedule}/>
+            <Stack.Screen name="Food" component={FoodInput}/>
 
           </Stack.Navigator>
         </NavigationContainer>
