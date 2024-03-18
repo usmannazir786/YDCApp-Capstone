@@ -1,125 +1,103 @@
-import React, { useCallback, useState, useEffect, Fragment} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { auth, db } from '../../Firebase/firebaseConfig';
-import Contacts from 'react-native-contacts';
-
-
-const [contacts, setContacts] = React.useState<Contacts.Contact[] | null>(
-    null,
-  );
-  React.useEffect(() => {
-    if (Platform.OS === 'android') {
-      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-        title: 'Contacts',
-        message: 'ContactsList app would like to access your contacts.',
-        buttonPositive: 'Accept',
-      }).then(value => {
-        if (value === 'granted') {
-          Contacts.getAll().then(setContacts);
-        }
-      });
-    } else {
-      Contacts.getAll().then(setContacts);
-    }
-  }, []);
-
-  const sections = React.useMemo(() => {
-    if (!contacts) {
-      return null;
-    }
-  
-    const sectionsMap = contacts.reduce<Record<string, Contacts.Contact[]>>(
-      (acc, contact) => {
-        const {familyName} = contact;
-        const [firstLetter] = familyName;
-  
-        return Object.assign(acc, {
-          [firstLetter]: [...(acc[firstLetter] || []), contact],
-        });
-      },
-      {},
+import React, { useEffect, useState } from 'react';
+import {
+    View, Text, FlatList,
+    TouchableOpacity, TextInput,
+    Pressable
+} from 'react-native';
+import {
+    requestContactsPermission,
+    makeCall, filterContacts
+} from './ContactsFunctions';
+ 
+const ContactsScreen = () => {
+    const [contacts, setContacts] = useState([]);
+    const [filteredContacts, setFilteredContacts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+ 
+    useEffect(() => {
+        requestContactsPermission(setContacts, setFilteredContacts);
+    }, []);
+ 
+    const handleSearch = () => {
+        filterContacts(contacts, searchQuery, setFilteredContacts);
+    };
+ 
+    const renderItem = ({ item }) => (
+        <TouchableOpacity
+            onPress={() => makeCall(item)}
+            style={{ borderBottomWidth: 1, borderColor: '#228B22' }}
+        >
+            <View
+                style={{
+                    padding: 20,
+                    backgroundColor: 'white',
+                }}
+            >
+                <Text style=
+                    {
+                        { color: '#228B22' }}>
+                    {item.name}: {item.phoneNumbers
+                        && item.phoneNumbers.length > 0 &&
+                        item.phoneNumbers[0].number}
+                </Text>
+            </View>
+        </TouchableOpacity>
     );
-  
-    return Object.entries(sectionsMap)
-      .map(([letter, items]) => ({
-        letter,
-        items: items.sort((a, b) => a.familyName.localeCompare(b.familyName)),
-      }))
-      .sort((a, b) => a.letter.localeCompare(b.letter));
-  }, [contacts]);
-
-
-  if (!sections) {
+ 
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-        }}>
-        <ActivityIndicator />
-      </View>
+        <View>
+            <View style=
+                {
+                    {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        margin: 10
+                    }
+                }>
+                <TextInput
+                    style=
+                    {
+                        {
+                            flex: 1, height: 40,
+                            borderColor: '#228B22',
+                            borderWidth: 1, marginRight: 10,
+                            paddingLeft: 10, color: '#228B22'
+                        }
+                    }
+                    placeholder="Search"
+                    value={searchQuery}
+                    onChangeText={
+                        (text) =>
+                            setSearchQuery(text)
+                    }
+                />
+                <Pressable
+                    style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? '#1e8449' : '#2ecc71',
+                            padding: 10,
+                            borderRadius: 5,
+                        },
+                    ]}
+                    onPress={handleSearch}
+                >
+                    <Text style=
+                        {
+                            {
+                                color: 'white'
+                            }
+                        }>
+                        Search
+                    </Text>
+                </Pressable>
+            </View>
+            <FlatList
+                data={filteredContacts}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+            />
+        </View>
     );
-  }
-
-
-  {sections.map(({letter, items}) => (
-    <View style={styles.section} key={letter}>
-      <Text style={styles.sectionTitle}>{letter}</Text>
-      <View style={styles.sectionItems}>
-        {items.map(
-          (
-            {givenName, familyName, phoneNumbers, thumbnailPath},
-            index,
-          ) => {
-            const name = `${givenName} ${familyName}`;
-            const phone = phoneNumbers.length
-              ? phoneNumbers[0].number
-              : '-';
-            const img = thumbnailPath;
-  
-            return (
-              <View key={index} style={styles.cardWrapper}>
-                <TouchableOpacity
-                  onPress={() => {
-                  
-                  }}>
-                  <View style={styles.card}>
-                    {img ? (
-                      <Image
-                        alt=""
-                        resizeMode="cover"
-                        source={{uri: img}}
-                        style={styles.cardImg}
-                      />
-                    ) : (
-                      <View style={[styles.cardImg, styles.cardAvatar]}>
-                        <Text style={styles.cardAvatarText}>
-                          {name[0]}
-                        </Text>
-                      </View>
-                    )}
-                
-                    <View style={styles.cardBody}>
-                      <Text style={styles.cardTitle}>{name}</Text>
-                
-                      <Text style={styles.cardPhone}>{phone}</Text>
-                    </View>
-                
-                    <View style={styles.cardAction}>
-                      <FeatherIcon
-                        color="#9ca3af"
-                        name="chevron-right"
-                        size={22}
-                      />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            );
-          },
-        )}
-      </View>
-    </View>
-  ))}
+};
+ 
+export default ContactsScreen;
