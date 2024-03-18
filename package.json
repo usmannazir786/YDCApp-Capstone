@@ -17,6 +17,7 @@
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-calendars": "^1.1304.1",
+    "react-native-contacts": "^7.0.8",
     "react-native-dotenv": "^3.4.11",
     "react-native-elements": "^3.4.3",
     "react-native-gifted-chat": "^2.4.0",
