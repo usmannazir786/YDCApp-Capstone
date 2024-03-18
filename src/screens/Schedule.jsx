@@ -175,7 +175,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
     return (
         
         <SafeAreaView style={styles.container}>
-            <Button mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
+            <Button style={styles.returnBtn} mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
             <Agenda
             items={items}
                 loadItemsForMonth={loadItems}
@@ -311,12 +311,16 @@ const timeToString = (time) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        height: '100%'
     },
     registerBtn: {
         borderRadius: 10,
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    returnBtn: {
+        marginTop: '5%'
     }
 });
 
