@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../../Firebase/firebaseConfig';
-import { Alert, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection} from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
-import { TextInput, Button, } from 'react-native-paper';
+import { TextInput, Button, HelperText } from 'react-native-paper';
 import PasswordStrengthIndicator from './components/PasswordStrengthIndicator';
+//Came across this password cracker algorithm from randomly searching for password strength indicator libraries
+import zxcvbn from 'zxcvbn';
 
 const Signup = ({ route, navigation }) => {
     const [firstname, setFirstName] = useState('');
@@ -14,53 +17,65 @@ const Signup = ({ route, navigation }) => {
     const {email: initialEmail} = route.params;
     const [email, setEmail] = useState(initialEmail);
     const [password, setPassword] = useState('');
-    const [visible, setVisibile] = useState(false);
-    const [strength, setStrength] = useState(null)
+    const [passVisible, setPassVisibile] = useState(false);
+    const [passReqVisible, setPassReqVisible] = useState(false);
+    const [passErrorVisible, setPassErrorVisible] = useState(false);
+    const [firstErrorVisible, setFirstErrorVisible] = useState(false);
+    const [lastErrorVisible, setLastErrorVisible] = useState(false);
+    const [emailErrorVisible, setEmailErrorVisible] = useState(false);
+    const [strength, setStrength] = useState(null);
 
-    const inputValidation = () => {
-        //Regex for input validation meets requirements
-        const firstNameRegex = /^[A-Za-z0-9\s]+$/;
-        const lastNameRegex = /^[A-Za-z0-9\s]+$/;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //Regular expressions for validation
+    //Regex for input validation meets requirements
+    const firstNameRegex = /^[A-Za-z0-9\s]+$/;
+    const lastNameRegex = /^[A-Za-z0-9\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        /*
-            At least one lowercase
-            At least one uppercase
-            At least one digit
-            At least one special character
-            At least 8 characters
-        */
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        //Booleans to check if each input is valid
-        let fncheck = false;
-        let lncheck = false;
-        let emailcheck = false;
-        let passwordcheck = false;
+    /*
+        At least one lowercase
+        At least one uppercase
+        At least one digit
+        At least one special character
+        At least 8 characters
+    */
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-        //If any of these are false, update something to notify the user which input they need to fix
+    const checkFirst = () => {
         if (firstNameRegex.test(firstname)) {
-            fncheck = true;
+            return true;
+        } else {
+            return false;
         }
-
+    }
+    
+    const checkLast = () => {
         if (lastNameRegex.test(lastname)) {
-            lncheck = true;
+            return true;
+        } else {
+            return false;
         }
+    }
 
+    const checkEmail = () => {
         if (emailRegex.test(email)) {
-            emailcheck = true;
+            return true;
+        } else {
+            return false;
         }
+    }
 
+    const checkPass = () => {
         if (passwordRegex.test(password)) {
-            passwordcheck = true;
+            return true;
+        } else {
+            return false;
         }
-
-        return fncheck && lncheck && emailcheck && passwordcheck
     }
     
     //Creates both the email and password for the user as well as a user collection relating to additional user info
     const handleSignUp = () => {
         //If the inputs look good then create the user
-        if (inputValidation()) {
+        if (checkEmail() && checkFirst() && checkLast() && checkPass()) {
             createUserWithEmailAndPassword(auth, email, password)
             .then((cred) => {
                 console.log('Created User:', cred.user);
@@ -101,8 +116,9 @@ const Signup = ({ route, navigation }) => {
         }
     }
     
+    //Constant update and check on the password
     useEffect(() => {
-        setStrength()
+        setStrength(zxcvbn(password).score)
     })
 
     return (
@@ -112,40 +128,125 @@ const Signup = ({ route, navigation }) => {
                 placeholder='First Name'
                 autoCapitalize='words'
                 onChangeText={firstname => setFirstName(firstname)}
+                error={firstErrorVisible}
+                placeholderTextColor={firstErrorVisible ? 'red' : undefined}
+                onBlur={() => {
+                    if (firstname.trim() === '' || firstname === null) {
+                        setFirstErrorVisible(true);
+                    } else {
+                        setFirstErrorVisible(false);
+                    }
+                }}
             />
+            {firstErrorVisible && (
+                <HelperText type='error' visible={!checkFirst()}>First Name Invalid!</HelperText>
+            )}
             <TextInput
                 // style={}
                 placeholder='Last Name'
                 autoCapitalize='words'
                 onChangeText={lastname => setLastName(lastname)}
+                error={lastErrorVisible}
+                placeholderTextColor={lastErrorVisible ? 'red' : undefined}
+                onBlur={() => {
+                    if (lastname.trim() === '' || lastname === null) {
+                        setLastErrorVisible(true);
+                    } else {
+                        setLastErrorVisible(false);
+                    }
+                }}
             />
+            
+            {lastErrorVisible && (
+                <HelperText type='error' visible={!checkLast()}>Last Name Invalid!</HelperText>
+            )}
             <TextInput
                 placeholder='Email'
                 autoCapitalize='none'
                 onChangeText={email => setEmail(email)}
                 value={email}
-            />
-            <View>
-                <TextInput
-                    secureTextEntry={!visible}
-                    placeholder="Password"
-                    autoCapitalize="none"
-                    onChangeText={password => setPassword(password)}
-                    right={
-                    <TextInput.Icon 
-                        icon={!visible ? "eye" : "eye-off" }
-                        size={20}
-                        onPress={() => setVisibile(!visible)}
-                    />
+                error={emailErrorVisible}
+                placeholderTextColor={emailErrorVisible ? 'red' : undefined}
+                onBlur={() => {
+                    if (email.trim() === '' || email === null) {
+                        setEmailErrorVisible(true);
+                    } else {
+                        setEmailErrorVisible(false);
                     }
+                }}
+            />
+            {emailErrorVisible && (
+                <HelperText type='error' visible={!checkEmail()}>Email Invalid!</HelperText>
+            )}
+            <TextInput
+                secureTextEntry={!passVisible}
+                placeholder="Password"
+                autoCapitalize="none"
+                onChangeText={password => setPassword(password)}
+                right={
+                <TextInput.Icon 
+                    icon={!passVisible ? "eye" : "eye-off" }
+                    size={20}
+                    color={passErrorVisible ? 'red' : undefined}
+                    onPress={() => setPassVisibile(!passVisible)}
                 />
-                <PasswordStrengthIndicator strength={strength}/>
-            </View>
+                }
+                error={passErrorVisible}
+                placeholderTextColor={passErrorVisible ? 'red' : undefined}
+                onFocus={() => setPassReqVisible(!passReqVisible)}
+                onBlur={() => {
+                    setPassReqVisible(!passReqVisible)
+                    if (password.trim() === '' || password === null) {
+                        setPassErrorVisible(true)
+                    } else {
+                        setPassErrorVisible(!checkPass())
+                    }
+                }}
+            />
+            {passErrorVisible && (
+                <HelperText type='error' visible={!checkPass()}>Password Invalid!</HelperText>
+            )}
+            {passReqVisible && (
+                <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 10,
+                    marginBottom: 10,
+                }}>
+                    <View style={styles.passReqContainer}>
+                        <PasswordStrengthIndicator strength={strength}/>
+                        <Text style={[styles.passReqText]}>At least 8 letters</Text>
+                        <Text style={styles.passReqText}>At least one lowercase</Text>
+                        <Text style={styles.passReqText}>At least one uppercase</Text>
+                        <Text style={styles.passReqText}>At least one digit</Text>
+                        <Text style={styles.passReqText}>At least one special character</Text>
+                    </View>
+                </View>
+            )}
             <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
             <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
 
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    passReqContainer: {
+        height: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 5, 
+        padding: 15,
+        width: '80%',
+    },
+    passReqText: {
+        width: '100%',
+        marginTop: 10,
+        fontSize: 13,
+        textAlign: 'left',
+    }
+})
 
 export default Signup;

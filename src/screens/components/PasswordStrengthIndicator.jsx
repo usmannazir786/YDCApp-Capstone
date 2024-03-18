@@ -1,54 +1,82 @@
-import { View, FlatList, StyleSheet } from 'react-native';
-import { Text } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
+import { ProgressBar } from 'react-native-paper';
 
 function PasswordStrengthIndicator({ strength }) {
-    let strengthLevels = [
-        {label: 'Weak', color: 'red'},
-        {label: 'Fair', color: 'orange'},
-        {label: 'Okay', color: 'yellow'},
-        {label: 'Strong', color: 'green'},
-    ]
+    let progressVal;
+    let progressColour;
+    let strengthLabel;
+    
+    //Set progress based on strength
+    if (strength === null || strength === undefined) {
+        progressVal = 0;
+        progressColour = 'grey';
+        strengthLabel = 'Weak';
+    } else {
+        switch (strength) {
+            case 0:
+                progressVal=0;
+                progressColour='grey';
+                strengthLabel = 'Weak';
+                break;
+            case 1:
+                progressVal=0.25;
+                progressColour='red';
+                strengthLabel = 'Bad';
+                break;
+            case 2:
+                progressVal=0.5;
+                progressColour='orange';
+                strengthLabel = 'Okay';
+                break;
+            case 3:
+                progressVal=0.75;
+                progressColour='lightgreen';
+                strengthLabel = 'Good';
+                break;
+            case 4:
+                progressVal=1;
+                progressColour='green';
+                strengthLabel = 'Strong';
+                break;
+            default:
+                progressVal=0;
+                progressColour='grey';
+                strengthLabel = 'Weak';
+        }
+    }
 
+    const checkProgress = (x) => {
+        if (progressVal === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     return (
         <>
             <View>
-                <FlatList
-                    data={strengthLevels}
-                    renderItem={({ item, index }) => {
-                        <View
-                            key={index}
-                            style={[
-                                styles.strengthBox,
-                                {backgroundColor: strength == index ? item.color : 'lightgrey'}
-                            ]}
-                        >
-                        </View>
-                    }}
-                    keyExtractor={(item, index) => index.toString()}
-                    horizontal={true} // Set this prop to true for horizontal list
-                    showsHorizontalScrollIndicator={false}
+                <ProgressBar
+                    progress={progressVal}
+                    color={progressColour}
+                    style={styles.progressBar}
                 />
+                {checkProgress(progressVal) && (
+                    <Text style={[styles.text, {color: progressColour}]}>{strengthLabel}</Text>
+                )}
             </View>
         </>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 22,
-      },
-    item: {
-        padding: 0,
-        fontSize: 18,
-        height: 44,
-        width: 50, // Set width for horizontal list items
-        margin: 10, // Add margin for spacing between items
-        backgroundColor: '#f0f0f0',
-      },
-    strengthBox: {
-        height: 2,
-        width: 32,
+    progressBar: {
+        height: 6,
+        width: 300,
+        borderRadius: 5
+    },
+    text: {
+        textAlign: 'right'
     }
 })
 
