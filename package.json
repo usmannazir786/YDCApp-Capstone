@@ -16,7 +16,7 @@
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.8.1",
     "react": "18.2.0",
-    "react-native": "^0.73.5",
+    "react-native": "^0.73.6",
     "react-native-calendars": "^1.1304.1",
     "react-native-dotenv": "^3.4.11",
     "react-native-elements": "^3.4.3",
