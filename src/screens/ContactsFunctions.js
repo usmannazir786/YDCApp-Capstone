@@ -1,7 +1,7 @@
 // ContactsFunctions.js
 import * as Contacts from 'expo-contacts';
 import { Linking, Alert } from 'react-native';
-import { getContactsByEmailAddress } from 'react-native-contacts';
+
 
 // Add dummy contacts for testing
 const dummyContacts = [
@@ -9,22 +9,25 @@ const dummyContacts = [
 		id: '1',
 		name: 'Jackson',
 		phoneNumbers: [
-		getContactsByEmailAddress	
+		
 		],
+		
 	},
 	{
 		id: '2',
 		name: 'Ted 2',
 		phoneNumbers: [
-		getContactsByEmailAddress	
+			
 		],
+		
 	},
 	{
 		id: '3',
 		name: 'Gary',
 		phoneNumbers: [
-        getContactsByEmailAddress
+        
 		],
+		
 	},
 	// this is just dummy data. figure how to do the data part later
 ];
