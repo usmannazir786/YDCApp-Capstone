@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc, getDocs, doc } from 'firebase/firestore/lite';
+import { Button } from 'react-native-paper';
+import { StackActions } from '@react-navigation/native';
 
-const FoodInput = () => {
+const FoodInput = ({ navigation }) => {
     
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
@@ -49,6 +51,7 @@ const FoodInput = () => {
             <Text>Enter Your Suggestion!</Text>
             </TouchableOpacity>
             </View>
+            <Button mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
             <FlatList
                 data={foodList}
                 keyExtractor={item => item.id}
