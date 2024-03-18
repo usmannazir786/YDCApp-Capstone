@@ -20,21 +20,20 @@ const App = () => {
 
 
     return (
-
-      <PaperProvider>
+          
+        <PaperProvider>
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
             }}
-          
+          >
             <Stack.Screen name="Login Auth" component={Login}/>
             <Stack.Screen name="Signup Auth" component={Signup}/>
             <Stack.Screen name="Youth Drop-In Center" component={HomePage}/>
             <Stack.Screen name="Schedule" component={Schedule}/>
             <Stack.Screen name="Food" component={FoodInput}/>
-              <Stack.Screen name="Chat" component={Chat}/>
-
+            <Stack.Screen name="Chat" component={Chat}/>
 
           </Stack.Navigator>
         </NavigationContainer>
