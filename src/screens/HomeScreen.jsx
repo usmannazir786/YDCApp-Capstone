@@ -1,9 +1,26 @@
-import React from 'react';
-import { SafeAreaView, Button, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-paper';
+import { StackActions } from '@react-navigation/native';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../Firebase/firebaseConfig';
 
 
 
-function Home({ navigation }) {
+function Home({ navigation, route }) {
+  const {email} = route.params;
+  
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log('User: ', email, ' is logging out');
+        navigation.dispatch(StackActions.pop(1))
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -19,6 +36,8 @@ function Home({ navigation }) {
             <Text style={styles.title}>Food Voting</Text>
           </TouchableOpacity>
         </View>
+
+        <Button mode='outlined' onPress={handleLogout}>Logout</Button>
 
       </View>
     </SafeAreaView>

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../../Firebase/firebaseConfig';
-import { TextInput, Button } from 'react-native';
+import { Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, doc } from 'firebase/firestore';
+import { addDoc, collection} from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
+import { TextInput, Button, } from 'react-native-paper';
 
 const Signup = ({ route, navigation }) => {
     const [firstname, setFirstName] = useState('');
@@ -12,10 +13,54 @@ const Signup = ({ route, navigation }) => {
     const {email: initialEmail} = route.params;
     const [email, setEmail] = useState(initialEmail);
     const [password, setPassword] = useState('');
+    const [visible, setVisibile] = useState(false);
 
     //Creates both the email and password for the user as well as a user collection relating to additional user info
     const handleSignUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
+        //Regex for input validation meets requirements
+        const firstNameRegex = /^[A-Za-z0-9\s]+$/;
+        const lastNameRegex = /^[A-Za-z0-9\s]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        /*
+            At least one lowercase
+            At least one uppercase
+            At least one digit
+            At least one special character
+            At least 8 characters
+        */
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        //Booleans to check if each input is valid
+        let fncheck = false;
+        let lncheck = false;
+        let emailcheck = false;
+        let passwordcheck = false;
+        let inputposition = '';
+
+        //If any of these are false, update something to notify the user which input they need to fix
+        if (firstNameRegex.test(firstname)) {
+            fncheck = true;
+            inputposition = inputposition, 'FirstName|';
+        }
+
+        if (lastNameRegex.test(lastname)) {
+            lncheck = true;
+            inputposition = inputposition, 'LastName|';
+        }
+
+        if (emailRegex.test(email)) {
+            emailcheck = true;
+            inputposition = inputposition, 'Email|';
+        }
+
+        if (passwordRegex.test(password)) {
+            passwordcheck = true;
+            inputposition = inputposition, 'Password|';
+        }
+
+        //If the inputs look good then create the user
+        if (fncheck && lncheck && emailcheck && passwordcheck) {
+            createUserWithEmailAndPassword(auth, email, password)
             .then((cred) => {
                 console.log('Created User:', cred.user);
 
@@ -42,8 +87,17 @@ const Signup = ({ route, navigation }) => {
                     })
             })
             .catch((err) => {
-                console.error(err.message);
+                if (err.code == 'auth/email-already-in-use') {
+                    Alert.alert('Error', 'This email already exists');
+                    console.error('User tried to create an account with an existing email');
+                } else {
+                    console.error('Error creating user: ', err.message);
+                }
             })
+        } else {
+            console.error('User failed to enter information to one of the inputs at ', inputposition);
+            Alert.alert('Error', 'Missing input requirement(s)');
+        }
     }
     
     return (
@@ -67,12 +121,21 @@ const Signup = ({ route, navigation }) => {
                 value={email}
             />
             <TextInput
-                secureTextEntry
-                placeholder='Password'
+                secureTextEntry={!visible}
+                placeholder="Password"
                 autoCapitalize="none"
                 onChangeText={password => setPassword(password)}
+                right={
+                <TextInput.Icon 
+                    icon={!visible ? "eye" : "eye-off" }
+                    size={20}
+                    onPress={() => setVisibile(!visible)}
+                />
+                }
             />
-            <Button title="Sign Up" onPress={handleSignUp} />
+            <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
+            <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
+
         </SafeAreaView>
     );
 };

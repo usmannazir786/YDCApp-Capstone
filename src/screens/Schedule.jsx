@@ -6,7 +6,6 @@ import {
     View,
     SafeAreaView,
     Modal,
-    Button,
     ScrollView,
 } from 'react-native';
 /*
@@ -17,7 +16,7 @@ import { Agenda } from 'react-native-calendars';
 /*
     Using a library that has components ready to be used in production: https://callstack.github.io/react-native-paper/
 */
-import { Card } from 'react-native-paper';
+import { Card, Button } from 'react-native-paper';
 /*
     Using moment to format dates
 */
@@ -27,12 +26,16 @@ import moment from 'moment';
 */
 import { db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
-//import { firebase } from '@react-native-firebase/auth';
+
+/*
+    Import for navigation around
+*/
+import { StackActions } from '@react-navigation/native';
 //import uuid from 'react-native-uuid';
 
 //Have unique id's for each card to tie to the events
 
-const Schedule = () => {
+const Schedule = ({ navigation }) => {
     //Databse references
     const scheduleRef = collection(db, 'schedule');
     //Items for card
@@ -172,6 +175,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
     return (
         
         <SafeAreaView style={styles.container}>
+            <Button mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
             <Agenda
             items={items}
                 loadItemsForMonth={loadItems}
