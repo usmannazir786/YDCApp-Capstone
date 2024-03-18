@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../../Firebase/firebaseConfig';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection} from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
 import { TextInput, Button, } from 'react-native-paper';
+import PasswordStrengthIndicator from './components/PasswordStrengthIndicator';
 
 const Signup = ({ route, navigation }) => {
     const [firstname, setFirstName] = useState('');
@@ -14,9 +15,9 @@ const Signup = ({ route, navigation }) => {
     const [email, setEmail] = useState(initialEmail);
     const [password, setPassword] = useState('');
     const [visible, setVisibile] = useState(false);
+    const [strength, setStrength] = useState(null)
 
-    //Creates both the email and password for the user as well as a user collection relating to additional user info
-    const handleSignUp = () => {
+    const inputValidation = () => {
         //Regex for input validation meets requirements
         const firstNameRegex = /^[A-Za-z0-9\s]+$/;
         const lastNameRegex = /^[A-Za-z0-9\s]+$/;
@@ -35,31 +36,31 @@ const Signup = ({ route, navigation }) => {
         let lncheck = false;
         let emailcheck = false;
         let passwordcheck = false;
-        let inputposition = '';
 
         //If any of these are false, update something to notify the user which input they need to fix
         if (firstNameRegex.test(firstname)) {
             fncheck = true;
-            inputposition = inputposition, 'FirstName|';
         }
 
         if (lastNameRegex.test(lastname)) {
             lncheck = true;
-            inputposition = inputposition, 'LastName|';
         }
 
         if (emailRegex.test(email)) {
             emailcheck = true;
-            inputposition = inputposition, 'Email|';
         }
 
         if (passwordRegex.test(password)) {
             passwordcheck = true;
-            inputposition = inputposition, 'Password|';
         }
 
+        return fncheck && lncheck && emailcheck && passwordcheck
+    }
+    
+    //Creates both the email and password for the user as well as a user collection relating to additional user info
+    const handleSignUp = () => {
         //If the inputs look good then create the user
-        if (fncheck && lncheck && emailcheck && passwordcheck) {
+        if (inputValidation()) {
             createUserWithEmailAndPassword(auth, email, password)
             .then((cred) => {
                 console.log('Created User:', cred.user);
@@ -95,11 +96,15 @@ const Signup = ({ route, navigation }) => {
                 }
             })
         } else {
-            console.error('User failed to enter information to one of the inputs at ', inputposition);
+            console.error('User failed to enter information to one of the inputs');
             Alert.alert('Error', 'Missing input requirement(s)');
         }
     }
     
+    useEffect(() => {
+        setStrength()
+    })
+
     return (
         <SafeAreaView>
             <TextInput
@@ -120,19 +125,22 @@ const Signup = ({ route, navigation }) => {
                 onChangeText={email => setEmail(email)}
                 value={email}
             />
-            <TextInput
-                secureTextEntry={!visible}
-                placeholder="Password"
-                autoCapitalize="none"
-                onChangeText={password => setPassword(password)}
-                right={
-                <TextInput.Icon 
-                    icon={!visible ? "eye" : "eye-off" }
-                    size={20}
-                    onPress={() => setVisibile(!visible)}
+            <View>
+                <TextInput
+                    secureTextEntry={!visible}
+                    placeholder="Password"
+                    autoCapitalize="none"
+                    onChangeText={password => setPassword(password)}
+                    right={
+                    <TextInput.Icon 
+                        icon={!visible ? "eye" : "eye-off" }
+                        size={20}
+                        onPress={() => setVisibile(!visible)}
+                    />
+                    }
                 />
-                }
-            />
+                <PasswordStrengthIndicator strength={strength}/>
+            </View>
             <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
             <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
 
