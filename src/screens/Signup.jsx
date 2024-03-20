@@ -38,7 +38,21 @@ const Signup = ({ route, navigation }) => {
         At least one special character
         At least 8 characters
     */
+    const lowerRegex = /.*[a-z]/.test(password);
+    const upperRegex = /.*[A-Z]/.test(password);
+    const digitRegex = /.*\d/.test(password);
+    const specialCharRegex = /.*[@$!%*?&]/.test(password);
+    const minimCharRegex = /.{8,}/.test(password);
+    //Whole password regex
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    const testEmptyString = (string) => {
+        if (string.trim() === '' || string === null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     const checkFirst = () => {
         if (firstNameRegex.test(firstname)) {
@@ -119,7 +133,7 @@ const Signup = ({ route, navigation }) => {
     //Constant update and check on the password
     useEffect(() => {
         setStrength(zxcvbn(password).score)
-    })
+    });
 
     return (
         <SafeAreaView>
@@ -134,7 +148,7 @@ const Signup = ({ route, navigation }) => {
                     if (firstname.trim() === '' || firstname === null) {
                         setFirstErrorVisible(true);
                     } else {
-                        setFirstErrorVisible(false);
+                        setFirstErrorVisible(!checkFirst());
                     }
                 }}
             />
@@ -152,7 +166,7 @@ const Signup = ({ route, navigation }) => {
                     if (lastname.trim() === '' || lastname === null) {
                         setLastErrorVisible(true);
                     } else {
-                        setLastErrorVisible(false);
+                        setLastErrorVisible(!checkLast());
                     }
                 }}
             />
@@ -171,7 +185,7 @@ const Signup = ({ route, navigation }) => {
                     if (email.trim() === '' || email === null) {
                         setEmailErrorVisible(true);
                     } else {
-                        setEmailErrorVisible(false);
+                        setEmailErrorVisible(!checkEmail());
                     }
                 }}
             />
@@ -215,17 +229,16 @@ const Signup = ({ route, navigation }) => {
                 }}>
                     <View style={styles.passReqContainer}>
                         <PasswordStrengthIndicator strength={strength}/>
-                        <Text style={[styles.passReqText]}>At least 8 letters</Text>
-                        <Text style={styles.passReqText}>At least one lowercase</Text>
-                        <Text style={styles.passReqText}>At least one uppercase</Text>
-                        <Text style={styles.passReqText}>At least one digit</Text>
-                        <Text style={styles.passReqText}>At least one special character</Text>
+                        <Text style={[styles.passReqText, (!testEmptyString(password) ? (minimCharRegex ? styles.validText : styles.invalidText) : undefined )]}>At least 8 characters</Text>
+                        <Text style={[styles.passReqText, (!testEmptyString(password) ? (lowerRegex ? styles.validText : styles.invalidText) : undefined )]}>At least one lowercase</Text>
+                        <Text style={[styles.passReqText, (!testEmptyString(password) ? (upperRegex ? styles.validText : styles.invalidText) : undefined )]}>At least one uppercase</Text>
+                        <Text style={[styles.passReqText, (!testEmptyString(password) ? (digitRegex ? styles.validText : styles.invalidText) : undefined )]}>At least one digit</Text>
+                        <Text style={[styles.passReqText, (!testEmptyString(password) ? (specialCharRegex ? styles.validText : styles.invalidText) : undefined )]}>At least one special character</Text>
                     </View>
                 </View>
             )}
             <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
             <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
-
         </SafeAreaView>
     );
 };
@@ -246,6 +259,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 13,
         textAlign: 'left',
+    },
+    invalidText: {
+        color: 'red',
+    },
+    validText: {
+        color: 'green',
     }
 })
 
