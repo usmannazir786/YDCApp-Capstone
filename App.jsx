@@ -15,6 +15,8 @@ import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
 
+import TabBottom from './src/screens/BottomBar';
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -36,6 +38,8 @@ const App = () => {
             <Stack.Screen name="Food" component={FoodInput}/>
             <Stack.Screen name="Chat" component={Chat}/>
             <Stack.Screen name="Polling" component={Polling}/>
+            <Stack.Screen name='MyTab' component={TabBottom} 
+        />
 
           </Stack.Navigator>
         </NavigationContainer>
