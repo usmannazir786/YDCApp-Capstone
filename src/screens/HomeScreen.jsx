@@ -25,22 +25,23 @@ function Home({ navigation, route }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
 
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule')}>
-            <Text style={styles.title}>Scheduler</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
-            <Text style={styles.title}>Food Voting</Text>
-          </TouchableOpacity>
-        </View>
+        
 
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Chat', { chatId: '1111' })}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('MessageScreen')}>
             <Text style={styles.title}>Chat</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonBlock}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Explore')}>
+            <Text style={styles.title}>Explore</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.buttonBlock}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Notification')}>
+            <Text style={styles.title}>Notification</Text>
           </TouchableOpacity>
         </View>
 
