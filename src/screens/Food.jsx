@@ -6,7 +6,8 @@ import { Button } from 'react-native-paper';
 import { StackActions } from '@react-navigation/native';
 
 const FoodInput = ({ navigation }) => {
-    
+
+ 
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
 
@@ -40,7 +41,7 @@ const FoodInput = ({ navigation }) => {
     
     
     return (
-        <View  style={styles.container}>
+        <View style={styles.container}>
             <TextInput   
                 placeholder="Enter food here"
                 value={food}
@@ -59,6 +60,13 @@ const FoodInput = ({ navigation }) => {
                 )}
             />
             
+            <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
+                const recentOptions = foodList.slice(0, 3);
+                navigation.navigate('Polling', { recentOptions: recentOptions });
+                }}>
+            <Text style={styles.buttonText}>Polling</Text>
+            </TouchableOpacity>
+
             <Button mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
         </View>
     );
@@ -84,7 +92,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,
-      }
+      },
+      buttonBlockTwo: {
+        marginBottom: 200,
+        marginTop: 40,
+        width: 250,
+        height: 100,
+        borderRadius: 15,
+        color: '#000000',
+        backgroundColor: '#DDDDDD',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    }
 });
 
 export default FoodInput;
