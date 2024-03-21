@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import {
-    View, Text, FlatList,
-    TouchableOpacity, TextInput,
-    Pressable
-} from 'react-native';
-import {
-    requestContactsPermission,
-    makeCall, filterContacts
-} from './ContactsFunctions';
+import {View, Text, FlatList, TouchableOpacity, TextInput, Pressable} from 'react-native';
+import { requestContactsPermission,makeCall, filterContacts} from './ContactsFunctions';
+
  
+
+
+
+
+// add the function the where can add/delete contacts
+
+
+
+// add the function where can conect to the chat page 
+
+
+
 const ContactsScreen = () => {
     const [contacts, setContacts] = useState([]);
     const [filteredContacts, setFilteredContacts] = useState([]);
@@ -25,7 +31,7 @@ const ContactsScreen = () => {
     const renderItem = ({ item }) => (
         <TouchableOpacity
             onPress={() => makeCall(item)}
-            style={{ borderBottomWidth: 1, borderColor: '#228B22' }}
+            style={{ borderBottomWidth: 1, borderColor: '#000000' }}
         >
             <View
                 style={{
@@ -35,7 +41,7 @@ const ContactsScreen = () => {
             >
                 <Text style=
                     {
-                        { color: '#228B22' }}>
+                        { color: '#000000' }}>
                     {item.name}: {item.phoneNumbers
                         && item.phoneNumbers.length > 0 &&
                         item.phoneNumbers[0].number}
@@ -59,9 +65,9 @@ const ContactsScreen = () => {
                     {
                         {
                             flex: 1, height: 40,
-                            borderColor: '#228B22',
+                            borderColor: '#000000',
                             borderWidth: 1, marginRight: 10,
-                            paddingLeft: 10, color: '#228B22'
+                            paddingLeft: 10, color: '##000000'
                         }
                     }
                     placeholder="Search"
