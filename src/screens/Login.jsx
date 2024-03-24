@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Text } from 'react-native';
-import { firebase } from 'firebase/firestore';
 import { 
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth';
-import { auth } from '../../Firebase/firebaseConfig';
+import { auth, db } from '../../Firebase/firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput, Button } from 'react-native-paper';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 //Tie information only related to the user to its uuid
 
@@ -16,6 +15,7 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [visible, setVisibile] = useState(false);
+  const [userRole, setUserRole] = useState("");
 
   //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
@@ -34,14 +34,37 @@ const Login = ({ navigation }) => {
       setErrorMessage('Invalid email or password input');
     } else {
       signInWithEmailAndPassword(auth, email, password)
-      .then(user => {
+      .then(userCred => {
         setErrorMessage(null);
-        console.log(user);
+        const user = userCred.user;
+        console.log(user.email);
+
+        //User Role check
+        // const userRef = doc(db, 'users', 'Y22hm8x4UZw6i4LYfZ8B');
+        // const docSnap = getDoc(userRef);
+        // docSnap.then((snapshot) => {
+        //   console.log(snapshot.data().role)
+        // });
+        
+        const userRef = collection(db, 'users');
+        const q = query(userRef, where("uid", "==", user.uid));
+
+        getDocs(q)
+          .then((qSnapshot) => {
+            qSnapshot.forEach((doc) => {
+              console.log(doc.data().role)
+            })
+          })
+          .catch((error) => {
+            console.error('Error: ', error);
+          })
+        ///////////////////////////////////////////////////
+
         navigation.navigate('Youth Drop-In Center', {email});
       })
       .catch(error => {
         setErrorMessage(error.message);
-        console.log('Error when user trying to log in: ', error);
+        console.error('Error when user trying to log in: ', error);
       });
     }
 

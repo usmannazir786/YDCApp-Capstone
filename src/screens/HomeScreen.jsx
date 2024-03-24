@@ -9,6 +9,7 @@ import { auth } from '../../Firebase/firebaseConfig';
 
 function Home({ navigation, route }) {
   const {email} = route.params;
+  const {userRole} = route.params;
   
   const handleLogout = () => {
     signOut(auth)
