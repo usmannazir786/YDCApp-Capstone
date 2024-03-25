@@ -89,7 +89,7 @@ const Signup = ({ route, navigation }) => {
     //Creates both the email and password for the user as well as a user collection relating to additional user info
     const handleSignUp = () => {
         //If the inputs look good then create the user
-        if (checkEmail() && checkFirst() && checkLast() && checkPass()) {
+        if (checkEmail() && checkFirst() && checkLast() && checkPass() && strength >= 2) {
             createUserWithEmailAndPassword(auth, email, password)
             .then((cred) => {
                 console.log('Created User:', cred.user);
@@ -124,6 +124,9 @@ const Signup = ({ route, navigation }) => {
                     console.error('Error creating user: ', err.message);
                 }
             })
+        } else if (strength < 2) {
+            console.error('Users password is too weak');
+            Alert.alert('Error', 'Password too weak');
         } else {
             console.error('User failed to enter information to one of the inputs');
             Alert.alert('Error', 'Missing input requirement(s)');
