@@ -15,7 +15,6 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [visible, setVisibile] = useState(false);
-  const [userRole, setUserRole] = useState("");
 
   //Move Signup to its own page for cleaner interface
   const handleSignUp = () => {
@@ -37,30 +36,26 @@ const Login = ({ navigation }) => {
       .then(userCred => {
         setErrorMessage(null);
         const user = userCred.user;
-        console.log(user.email);
+        const userUID = user.uid;
+        const userEmail = user.email;
 
         //User Role check
-        // const userRef = doc(db, 'users', 'Y22hm8x4UZw6i4LYfZ8B');
-        // const docSnap = getDoc(userRef);
-        // docSnap.then((snapshot) => {
-        //   console.log(snapshot.data().role)
-        // });
-        
         const userRef = collection(db, 'users');
         const q = query(userRef, where("uid", "==", user.uid));
 
         getDocs(q)
           .then((qSnapshot) => {
             qSnapshot.forEach((doc) => {
-              console.log(doc.data().role)
+              
+              const userRole = doc.data().role;
+              //console.log(userRole)
+              navigation.navigate('Youth Drop-In Center', {userUID, userEmail, userRole});
             })
           })
           .catch((error) => {
             console.error('Error: ', error);
-          })
+          });
         ///////////////////////////////////////////////////
-
-        navigation.navigate('Youth Drop-In Center', {email});
       })
       .catch(error => {
         setErrorMessage(error.message);
