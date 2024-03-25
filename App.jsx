@@ -35,6 +35,7 @@ const App = () => {
             <Stack.Screen name="Schedule" component={Schedule}/>
             <Stack.Screen name="Food" component={FoodInput}/>
             <Stack.Screen name="Chat" component={Chat}/>
+            <Stack.Screen name="Contacts" component={Contacts}/>
             <Stack.Screen name="Polling" component={Polling}/>
 
           </Stack.Navigator>
