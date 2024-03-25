@@ -44,11 +44,13 @@ function Home({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
+        
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Contacts')}>
-            <Text style={styles.title}>Contacts</Text>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Settings')}>
+            <Text style={styles.title}>Settings</Text>
           </TouchableOpacity>
         </View>
+        
 
         <Button mode='outlined' onPress={handleLogout}>Logout</Button>
 

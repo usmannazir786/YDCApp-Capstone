@@ -14,6 +14,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
+import Contacts from './src/screens/Contacts';
 
 const Stack = createNativeStackNavigator();
 
