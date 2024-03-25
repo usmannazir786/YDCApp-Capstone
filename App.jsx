@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Settings,
     Stylesheet,
     Text,
     View
@@ -14,6 +15,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
+import Settings from './src/screens/Settings';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +38,7 @@ const App = () => {
             <Stack.Screen name="Food" component={FoodInput}/>
             <Stack.Screen name="Chat" component={Chat}/>
             <Stack.Screen name="Polling" component={Polling}/>
-
+            <Stack.Screen name="Settings" component={Settings}/>
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
