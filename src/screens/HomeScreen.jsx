@@ -46,8 +46,8 @@ function Home({ navigation, route }) {
 
         
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.title}>Settings</Text>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Contacts')}>
+            <Text style={styles.title}>Contacts</Text>
           </TouchableOpacity>
         </View>
         
