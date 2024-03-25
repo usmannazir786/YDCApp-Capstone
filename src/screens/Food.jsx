@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, doc } from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs, doc } from 'firebase/firestore';
+import { Button } from 'react-native-paper';
+import { StackActions } from '@react-navigation/native';
 
-const FoodInput = () => {
-    
+const FoodInput = ({ navigation }) => {
+
+ 
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
 
@@ -38,7 +41,7 @@ const FoodInput = () => {
     
     
     return (
-        <View  style={styles.container}>
+        <View style={styles.container}>
             <TextInput   
                 placeholder="Enter food here"
                 value={food}
@@ -48,7 +51,7 @@ const FoodInput = () => {
             <TouchableOpacity style={styles.button} onPress={handleAddFood}>
             <Text>Enter Your Suggestion!</Text>
             </TouchableOpacity>
-            </View>
+            </View> 
             <FlatList
                 data={foodList}
                 keyExtractor={item => item.id}
@@ -57,6 +60,14 @@ const FoodInput = () => {
                 )}
             />
             
+            <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
+                const recentOptions = foodList.slice(0, 3);
+                navigation.navigate('Polling', { recentOptions: recentOptions });
+                }}>
+            <Text style={styles.buttonText}>Polling</Text>
+            </TouchableOpacity>
+
+            <Button mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
         </View>
     );
 };
@@ -65,6 +76,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 50,
       },
     buttonContainer: {
         marginTop: 20, 
@@ -80,7 +92,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,
-      }
+      },
+      buttonBlockTwo: {
+        marginBottom: 200,
+        marginTop: 40,
+        width: 250,
+        height: 100,
+        borderRadius: 15,
+        color: '#000000',
+        backgroundColor: '#DDDDDD',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    }
 });
 
 export default FoodInput;
