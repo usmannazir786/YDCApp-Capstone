@@ -16,7 +16,7 @@ import { Agenda } from 'react-native-calendars';
 /*
     Using a library that has components ready to be used in production: https://callstack.github.io/react-native-paper/
 */
-import { Card, Button } from 'react-native-paper';
+import { Card, Button, IconButton } from 'react-native-paper';
 /*
     Using moment to format dates
 */
@@ -170,11 +170,21 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         <SafeAreaView style={styles.container}>
             <Button style={styles.returnBtn} mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
             <Agenda
-            items={items}
+                items={items}
                 loadItemsForMonth={loadItems}
                 selected={formatDate}
                 renderItem={renderItem}
-                />
+            />
+            {userRole == 'Admin User' && (
+                <View style={styles.addEventContainer}>
+                    <IconButton
+                        icon={'plus'}
+                        size={30}
+                        onPress={() => {}}
+                        mode='contained-tonal'
+                    />
+                </View>
+            )}
                 <Modal visible={registerModalStatus} animationType='slide' transparent={true}>
                     <View style={{
                         flex: 1,
@@ -314,6 +324,15 @@ const styles = StyleSheet.create({
     },
     returnBtn: {
         marginTop: '5%'
+    },
+    addEventContainer: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        marginBottom: 10,
+        marginRight: 10,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
     }
 });
 
