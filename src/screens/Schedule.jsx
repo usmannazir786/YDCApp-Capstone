@@ -7,6 +7,8 @@ import {
     SafeAreaView,
     Modal,
     ScrollView,
+    Platform,
+    Pressable,
 } from 'react-native';
 /*
     Using a library that created agendas already from: https://github.com/wix/react-native-calendars
@@ -16,7 +18,7 @@ import { Agenda } from 'react-native-calendars';
 /*
     Using a library that has components ready to be used in production: https://callstack.github.io/react-native-paper/
 */
-import { Card, Button, IconButton } from 'react-native-paper';
+import { Card, Button, IconButton, TextInput } from 'react-native-paper';
 /*
     Using moment to format dates
 */
@@ -31,6 +33,11 @@ import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
     Import for navigation around
 */
 import { StackActions, useRoute } from '@react-navigation/native';
+/*
+    Import for date time pickers and help from:
+    https://www.youtube.com/watch?v=UEfFjfW7Zes&t=124s&ab_channel=ToThePointCode -- Date Time Picker IOS and Android 
+*/
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 //import uuid from 'react-native-uuid';
 
 //Have unique id's for each card to tie to the events
@@ -50,6 +57,14 @@ const Schedule = ({ navigation }) => {
     //States for schedule button
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
     const [userRegister, setUserRegister] = useState(false);
+    //States for admin event creation
+    const [eventModalStatus, setEventModalStatus] = useState(false);
+    const [eventName, setEventName] = useState('');
+    const [eventDate, setEventDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
+    //Regex Constants
+    const letterAndSpacesRegex = /^[a-zA-Z\s]+$/.test();
 
     let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
     
@@ -92,27 +107,27 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
             const strTime = timeToString(time);
             
             //If it doesn't exist already, initialize strTime property to an array
-            if (!items[strTime]) {
-              items[strTime] = [];
+            if (!items[strTime]) { // Keep this code line
+              items[strTime] = []; // Keep
               
               // Fills the contents of the array with random variables
               const numItems = Math.floor(Math.random() * 3 + 1);
               for (let j = 0; j < numItems; j++) {
-                items[strTime].push({
+                items[strTime].push({ // Keep this code line
                   name: 'Item for ' + strTime + ' #' + j,
                   height: Math.max(50, Math.floor(Math.random() * 150)),
                   day: strTime,
-                });
+                });                   // Keep until here
               }
             }
           }
           
           //Iterates over the item array and replaces any new items placed in and updates the array
-          const newItems = {};
+          const newItems = {}; // Keep this code line
           Object.keys(items).forEach(key => {
             newItems[key] = items[key];
           });
-          setItems(newItems);
+          setItems(newItems); // Keep this code line
         }, 1000);
       };
 //////////////////////////////////////////////////
@@ -131,8 +146,62 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
 //////////////////////////////////////////////////
 
 //Helper close function for modal
-      const closeModal = () => {
+      const closeRegisterModal = () => {
         setRegisterModalStatus(false);
+      }
+
+      const closeEventModal = () => {
+        setEventModalStatus(false);
+      }
+//////////////////////////////////////////////////
+
+//Event Date & Time Picker functions
+      const toggleDatePicker = () => {
+        setShowDatePicker(!showDatePicker);
+      }
+
+      const toggleTimePicker = () => {
+        setShowTimePicker(!showTimePicker);
+      }
+
+      const setDate = (event, selectedDate) => {
+        if (event === 'set') {
+            if (selectedDate) {
+                const newDate = selectedDate instanceof Date ? selectedDate : new Date(selectedDate);
+                setEventDate(newDate);
+
+                if (Platform.OS === 'android') {
+                    toggleDatePicker();
+                } else if (Platform.OS === 'ios') {
+                    toggleDatePicker();
+                }
+            }
+            console.log(eventDate)
+        } else {
+            toggleDatePicker();
+        }
+      }
+
+      const setTime = (event, selectedTime) => {
+        if (event === 'set') {
+            if (selectedTime) {
+                const hours = selectedTime.getHours()
+                const minutes = selectedTime.getMinutes()
+                const newDate = new Date(eventDate);
+                newDate.setHours(hours);
+                newDate.setMinutes(minutes);
+                setEventDate(newDate);
+
+                if (Platform.OS === 'android') {
+                    toggleDatePicker();
+                } else if (Platform.OS === 'ios') {
+                    toggleDatePicker();
+                }
+            }
+            console.log(eventDate)
+        } else {
+            toggleTimePicker();
+        }
       }
 //////////////////////////////////////////////////
 
@@ -147,7 +216,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         }
       });
 //////////////////////////////////////////////////
- 
+
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
 
@@ -174,15 +243,172 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                 loadItemsForMonth={loadItems}
                 selected={formatDate}
                 renderItem={renderItem}
+                showOnlySelectedDayItems={true}
             />
             {userRole == 'Admin User' && (
                 <View style={styles.addEventContainer}>
                     <IconButton
                         icon={'plus'}
                         size={30}
-                        onPress={() => {}}
+                        onPress={() => {
+                            setEventModalStatus(!eventModalStatus);
+                        }}
                         mode='contained-tonal'
                     />
+                    <Modal visible={eventModalStatus} animationType='slide' transparent={true}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(0,0,0,0.5)',
+                            paddingTop: 60,
+                            position: 'relative',
+                        }}>
+                            <View style={{
+                                backgroundColor: 'white',
+                                justifyContent: 'bottom',
+                                alignItems: 'center',
+                                padding: 15,
+                                width: '80%',
+                                height: '55%',
+                                borderRadius: 10,
+                                flexDirection: 'column',
+                                gap: 10,
+                            }}>
+                                <TextInput 
+                                    mode='outlined' 
+                                    label='Event Name'
+                                    onChangeText={eventName => setEventName(eventName)}
+                                    style={{
+                                        width: '100%',
+                                        height: 40,
+                                    }}
+                                />
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        gap: 10
+                                    }}
+                                >
+                                    {showDatePicker && (
+                                        <RNDateTimePicker 
+                                            mode='date'
+                                            value={currDate}
+                                            display='spinner'
+                                            onChange={setDate}
+                                            style={{
+                                                height: 120,
+                                                marginTop: -10
+                                            }}
+                                        />
+                                    )}
+                                    {showDatePicker && Platform.OS === 'ios' && (
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-around',
+                                            }}
+                                        >
+                                        <Button
+                                            mode='contained'
+                                            onPress={setDate}
+                                        >
+                                            Confirm
+                                        </Button>    
+                                        <Button
+                                            mode='outlined'
+                                            onPress={toggleDatePicker}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        </View>
+                                    )}
+                                    <Pressable
+                                        onPress={toggleDatePicker}
+                                    >
+                                        <TextInput 
+                                            mode='outlined'
+                                            label='Event Date'
+                                            value={timeToDateString(eventDate)}
+                                            editable={false}
+                                            onPressIn={toggleDatePicker}
+                                            style={{
+                                                height: 40,
+                                                width: 139
+                                            }}
+                                        />
+                                    </Pressable>
+
+                                    {showTimePicker && (
+                                        <RNDateTimePicker 
+                                            mode='time'
+                                            value={currDate}
+                                            display='spinner'
+                                            onChange={setTime}
+                                            style={{
+                                                height: 120,
+                                                marginTop: -10
+                                            }}
+                                        />
+                                    )}
+                                    {showTimePicker && Platform.OS === 'ios' && (
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-around',
+                                            }}
+                                        >
+                                        <Button
+                                            mode='contained'
+                                            onPress={setTime}
+                                        >
+                                            Confirm
+                                        </Button>    
+                                        <Button
+                                            mode='outlined'
+                                            onPress={toggleDatePicker}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        </View>
+                                    )}
+                                    <Pressable
+                                        onPress={toggleTimePicker}
+                                    >
+                                        <TextInput 
+                                            mode='outlined'
+                                            label='Event Time'
+                                            value={timeToString(eventDate)}
+                                            editable={false}
+                                            style={{
+                                                height: 40,
+                                                width: 139
+                                            }}
+                                        />
+                                    </Pressable>
+                                </View>
+
+                                <TouchableOpacity onPress={closeEventModal} style={[styles.registerBtn, {
+                                    backgroundColor: '#f54242',
+                                    position: 'absolute',
+                                    width: 75,
+                                    height: 50,
+                                    right: 10,
+                                    bottom: 10,
+                                }]}>
+                                    <Text style={{
+                                        color: '#f0efed',
+                                        fontSize: 15,
+                                        fontWeight: 'bold'
+                                    }}>
+                                        Close
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             )}
                 <Modal visible={registerModalStatus} animationType='slide' transparent={true}>
@@ -283,7 +509,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                     </Text>
                                 </View>)
                             }
-                            <TouchableOpacity onPress={closeModal} style={[styles.registerBtn, {
+                            <TouchableOpacity onPress={closeRegisterModal} style={[styles.registerBtn, {
                                 backgroundColor: '#f54242',
                                 position: 'absolute',
                                 width: 75,
@@ -307,6 +533,17 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
 }
 
 const timeToString = (time) => {
+    const date = new Date(time);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const amOrPm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    
+    return `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+}
+
+const timeToDateString = (time) => {
     const date = new Date(time);
     return date.toISOString().split('T')[0];
 }
@@ -333,7 +570,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
-    }
+    },
 });
 
 export default Schedule;
