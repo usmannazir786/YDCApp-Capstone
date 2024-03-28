@@ -30,10 +30,11 @@ function ChatList({navigation}) {
         <FlatList
         data={users}
         renderItem={({item}) => (
-        <TouchableOpacity onPress={() => navigation.navigate('Chat', {name: item.name, uid: item.uid})} >
+        <TouchableOpacity onPress={() => navigation.navigate('Chat', {name: item.firstname, uid: item.uid})} >
             <View style={styles.card} >
               <View style={styles.textArea}>
-            <Text style={styles.nameText} >{item.name}</Text>
+            <Text style={styles.nameText} >{item.firstname}</Text>
+            <Text style={styles.msgContent} >{item.email}</Text>
             </View>
             </View>
             </TouchableOpacity>

@@ -12,7 +12,7 @@ import { GiftedChat} from 'react-native-gifted-chat';
 const Chat = ({ navigation, route }) => {
 
   const currUser = auth?.currentUser.uid;
-  const receiveUser = route.params?.chatId;
+  const receiveUser = route.params.uid;
 
   const [messages, setMessages] = useState([]);
 
