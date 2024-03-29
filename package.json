@@ -24,6 +24,7 @@
     "react-native-gifted-chat": "^2.4.0",
     "react-native-paper": "^5.12.3",
     "react-native-swipe-list-view": "^3.2.9",
+    "react-native-uuid": "^2.0.2",
     "react-native-vector-icons": "^10.0.3",
     "zxcvbn": "^4.4.2"
   },

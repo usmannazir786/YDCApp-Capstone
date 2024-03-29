@@ -40,8 +40,7 @@ import { StackActions, useRoute } from '@react-navigation/native';
 */
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 //import uuid from 'react-native-uuid';
-
-//Have unique id's for each card to tie to the events
+import uuid from 'react-native-uuid'
 
 const Schedule = ({ navigation }) => {
     //Route params from login
@@ -67,14 +66,12 @@ const Schedule = ({ navigation }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     //Regex Constants
-    const letterAndSpacesRegex = /^[a-zA-Z\s]+$/.test();
+    const letterAndSpacesRegex = /^[a-zA-Z\s]+$/;
 
     let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
     
 //Creating a new function that keeps checking for the current date
     useEffect(() => {
-        console.log(userEmail);
-        console.log(userRole);
         //Calculates time until midnight
         const now = new Date();
         const midnight = new Date();
@@ -206,6 +203,73 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
             toggleTimePicker();
         }
       }
+//////////////////////////////////////////////////
+
+//Function to create events and helpers
+const testEmptyString = (string) => {
+    if (string.trim() === '' || string === null) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const letterCheck = () => {
+    if (letterAndSpacesRegex.test(eventName) && letterAndSpacesRegex.test(eventDescription)) {
+        console.log('nice');
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const formatEventDate = (initdate, inittime) => {
+    const date = new Date(initdate);
+
+    //Split the time format from string first
+    const timeStr = timeToString(inittime);
+    const [time, ampm] = timeStr.split(' ');
+    const [hoursStr, minutesStr] = time.split(':');
+    let hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
+
+    //Check for if PM
+    if (ampm === 'PM' && hours < 12) {
+        hours += 12;
+    } else if (ampm === 'AM' && hours === 12) {
+        hours = 0;
+    }
+
+    date.setHours(hours);
+    date.setMinutes(minutes);
+
+    return dateToDateTimeString(date);
+}
+
+const createEvent = async () => {
+    console.log(eventName);
+    console.log(moment(eventDate).format('YYYY-MM-DD'));
+    console.log(timeToString(eventTime));
+    console.log(eventDescription);
+    if (!testEmptyString(eventName) && !testEmptyString(eventDescription) && letterCheck()) {
+        const eventuid = uuid.v4();
+        const scheduleRef = await collection(db, 'schedule');
+        addDoc(scheduleRef, 
+            { 
+                eventuid: eventuid,
+                eventname: eventName,
+                eventdatetime: formatEventDate(eventDate, eventTime),
+                eventcreationdate: dateToDateTimeString(currDate),
+                volunteers: [],
+            });
+    } else {
+        console.error('Something went wrong with initializing an event, empty input maybe?');
+    }
+
+    closeEventModal();
+    //Clear states for each thing after successful creation back to default
+}
+
 //////////////////////////////////////////////////
 
 //Retrieve data from firebase
@@ -342,7 +406,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                             <TextInput 
                                                 mode='outlined'
                                                 label='Event Date'
-                                                value={timeToDateString(eventDate)}
+                                                value={dateToDateString(eventDate)}
                                                 editable={false}
                                                 onPressIn={toggleDatePicker}
                                                 style={{
@@ -411,20 +475,38 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
                                             }}
                                         />
                                     </ScrollView>
-                                    <TouchableOpacity onPress={closeEventModal} style={[styles.registerBtn, {
-                                        backgroundColor: '#f54242',
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'flex-end',
-                                        marginRight: '10%'
-                                    }]}>
-                                        <Text style={{
-                                            color: '#f0efed',
-                                            fontSize: 15,
-                                            fontWeight: 'bold'
-                                        }}>
-                                            Close
-                                        </Text>
-                                    </TouchableOpacity>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                    }}>
+                                        <TouchableOpacity onPress={createEvent} style={[styles.registerBtn, {
+                                            backgroundColor: '#2196F3',
+                                            justifyContent: 'flex-end',
+                                            marginRight: '10%'
+                                        }]}>
+                                            <Text style={{
+                                                color: '#f0efed',
+                                                fontSize: 15,
+                                                fontWeight: 'bold'
+                                            }}>
+                                                Confirm
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={closeEventModal} style={[styles.registerBtn, {
+                                            backgroundColor: '#f54242',
+                                            justifyContent: 'flex-end',
+                                            alignItems: 'flex-end',
+                                            marginRight: '10%'
+                                        }]}>
+                                            <Text style={{
+                                                color: '#f0efed',
+                                                fontSize: 15,
+                                                fontWeight: 'bold'
+                                            }}>
+                                                Close
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             </View>
                         </Modal>
@@ -563,9 +645,14 @@ const timeToString = (time) => {
     return `${formattedHours}:${formattedMinutes} ${amOrPm}`;
 }
 
-const timeToDateString = (time) => {
+const dateToDateString = (time) => {
     const date = new Date(time);
     return date.toISOString().split('T')[0];
+}
+
+const dateToDateTimeString = (time) => {
+    const date = new Date(time);
+    return moment(date).format('YYYY-MM-DD HH:mm');
 }
 
 const styles = StyleSheet.create({
