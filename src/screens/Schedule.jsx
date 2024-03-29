@@ -96,7 +96,7 @@ const Schedule = ({ navigation }) => {
 //Format the current date to the proper format to be intaked by Agenda
 const formatDate = moment(currDate).format('YYYY-MM-DD');
     
-//Creates the days and renders them into an array to be used by Agenda
+//Creates the days and renders them into an array to be used by Agenda THIS IS THE EVENT CREATION FOR NOW
     const loadItems = (day) => {
         const items = items || {};
         
@@ -182,8 +182,6 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
       }
 
       const setTime = (event, selectedTime) => {
-        // console.log(event)
-        // console.log(selectedTime);
         if (event.type === 'set') {
             if (selectedTime) {
                 const hours = selectedTime.getHours()
@@ -247,27 +245,32 @@ const formatEventDate = (initdate, inittime) => {
 }
 
 const createEvent = async () => {
-    console.log(eventName);
-    console.log(moment(eventDate).format('YYYY-MM-DD'));
-    console.log(timeToString(eventTime));
-    console.log(eventDescription);
     if (!testEmptyString(eventName) && !testEmptyString(eventDescription) && letterCheck()) {
         const eventuid = uuid.v4();
         const scheduleRef = await collection(db, 'schedule');
         addDoc(scheduleRef, 
             { 
-                eventuid: eventuid,
-                eventname: eventName,
-                eventdatetime: formatEventDate(eventDate, eventTime),
-                eventcreationdate: dateToDateTimeString(currDate),
                 volunteers: [],
+                eventcreationdate: dateToDateTimeString(currDate),
+                eventdatetime: formatEventDate(eventDate, eventTime),
+                eventdesc: eventDescription,
+                eventname: eventName,
+                eventuid: eventuid,
+            })
+            .then((doc) => {
+                //Clear states for each thing after successful creation back to default
+                setEventName('');
+                setEventDate(new Date());
+                setEventTime(new Date());
+                setEventDescription('');
+                closeEventModal();
+            })
+            .catch((err) => {
+                console.error('Error: ', err);
             });
     } else {
         console.error('Something went wrong with initializing an event, empty input maybe?');
     }
-
-    closeEventModal();
-    //Clear states for each thing after successful creation back to default
 }
 
 //////////////////////////////////////////////////
