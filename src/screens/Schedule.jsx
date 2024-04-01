@@ -254,7 +254,6 @@ const testEmptyString = (string) => {
 
 const letterCheck = () => {
     if (letterAndSpacesRegex.test(eventName) && letterAndSpacesRegex.test(eventDescription)) {
-        console.log('nice');
         return true;
     } else {
         return false;
