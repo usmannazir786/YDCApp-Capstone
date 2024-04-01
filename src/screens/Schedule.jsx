@@ -73,8 +73,6 @@ const Schedule = ({ navigation }) => {
     //Regex Constants
     const letterSpacesAndNumRegex = /^[a-zA-Z\s0-9]*$/;
 
-    let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
-    
 //Use Effect for Real-Time Current Date check
     useEffect(() => {
         //Calculates time until midnight
@@ -102,6 +100,10 @@ const Schedule = ({ navigation }) => {
 const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
     
 //Creates the days and renders them into an array to be used by Agenda THIS IS THE EVENT CREATION FOR NOW
+    useEffect(() => {
+        loadItems();
+    }, [])
+    
     const loadItems = () => {
         //Then load future data being added at real-time
         onSnapshot(scheduleRef, (snapshot) => {
@@ -415,7 +417,6 @@ const createEvent = async () => {
             <Button style={styles.returnBtn} mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
             <Agenda
                 items={items}
-                loadItemsForMonth={loadItems}
                 selected={formatCurrDate}
                 renderItem={renderItem}
                 showOnlySelectedDayItems={true}
@@ -733,7 +734,7 @@ const createEvent = async () => {
                                     bottom: 85,
                                     left: 20,
                                 }}>
-                                        <Text>{loremText}</Text>
+                                        <Text>Gang</Text>
                                 </ScrollView>
                                 {!userRegister ? 
                                     (<TouchableOpacity style={[styles.registerBtn, {
