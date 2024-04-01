@@ -28,7 +28,7 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 
 /*
     Import for navigation around
@@ -61,16 +61,20 @@ const Schedule = ({ navigation }) => {
     const [eventModalStatus, setEventModalStatus] = useState(false);
     const [eventName, setEventName] = useState('');
     const [eventDate, setEventDate] = useState(new Date());
-    const [eventTime, setEventTime] = useState(new Date());
+    const [eventStartTime, setEventStartTime] = useState(new Date());
+    const [eventEndTime, setEventEndTime] = useState(new Date());
     const [eventDescription, setEventDescription] = useState('');
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [showTimePicker, setShowTimePicker] = useState(false);
+    const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+    const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+    //Existing Dates in the Database
+    const [dates, setDates] = useState([]);
     //Regex Constants
     const letterAndSpacesRegex = /^[a-zA-Z\s]+$/;
 
     let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
     
-//Creating a new function that keeps checking for the current date
+//Use Effect for Real-Time Current Date check
     useEffect(() => {
         //Calculates time until midnight
         const now = new Date();
@@ -104,7 +108,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         setTimeout(() => {
           for (let i = -15; i < 85; i++) {
             const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-            const strTime = timeToString(time);
+            const strTime = timeToAMPMString(time);
             
             //If it doesn't exist already, initialize strTime property to an array
             if (!items[strTime]) { // Keep this code line
@@ -160,8 +164,12 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         setShowDatePicker(!showDatePicker);
       }
 
-      const toggleTimePicker = () => {
-        setShowTimePicker(!showTimePicker);
+      const toggleStartTimePicker = () => {
+        setShowStartTimePicker(!showStartTimePicker);
+      }
+
+      const toggleEndTimePicker = () => {
+        setShowEndTimePicker(!showEndTimePicker);
       }
 
       const setDate = (event, selectedDate) => {
@@ -169,7 +177,6 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
             if (selectedDate) {
                 const newDate = selectedDate instanceof Date ? selectedDate : new Date(selectedDate);
                 setEventDate(newDate);
-                console.log(timeToDateString(newDate))
                 if (Platform.OS === 'android') {
                     toggleDatePicker();
                 } else if (Platform.OS === 'ios') {
@@ -181,25 +188,58 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
         }
       }
 
-      const setTime = (event, selectedTime) => {
+      const setStartTime = (event, selectedTime) => {
         if (event.type === 'set') {
             if (selectedTime) {
                 const hours = selectedTime.getHours()
                 const minutes = selectedTime.getMinutes()
-                const newDate = new Date(eventTime);
+                const newDate = new Date(eventStartTime);
                 newDate.setHours(hours);
                 newDate.setMinutes(minutes);
-                setEventTime(newDate);
-                console.log(timeToString(eventTime))
-                if (Platform.OS === 'android') {
-                    toggleTimePicker();
-                } else if (Platform.OS === 'ios') {
-                    toggleTimePicker();
+                if (newDate < eventEndTime) {
+                    setEventStartTime(newDate);
+                    console.log(timeTo24String(eventStartTime))
+                    if (Platform.OS === 'android') {
+                        toggleStartTimePicker();
+                    } else if (Platform.OS === 'ios') {
+                        toggleStartTimePicker();
+                    }
+                } else {
+                    console.error('Start time cannot be after end time');
+                    toggleStartTimePicker();
                 }
             }
         } else {
-            toggleTimePicker();
+            toggleStartTimePicker();
         }
+      }
+
+      const setEndTime = (event, selectedTime) => {
+        console.log(selectedTime)
+        if (event.type === 'set') {
+            if (selectedTime) {
+                const hours = selectedTime.getHours()
+                const minutes = selectedTime.getMinutes()
+                const newDate = new Date(eventEndTime);
+                newDate.setHours(hours);
+                newDate.setMinutes(minutes);
+                if (newDate > eventStartTime) {
+                    setEventEndTime(newDate);
+                    if (Platform.OS === 'android') {
+                        toggleEndTimePicker();
+                    } else if (Platform.OS === 'ios') {
+                        toggleEndTimePicker();
+                    }
+                } else {
+                    console.error('End time cannot be before start time');
+                    toggleEndTimePicker();
+                }
+            }
+        } else {
+            toggleEndTimePicker();
+        }
+
+        console.log(eventEndTime);
       }
 //////////////////////////////////////////////////
 
@@ -221,53 +261,92 @@ const letterCheck = () => {
     }
 }
 
-const formatEventDate = (initdate, inittime) => {
-    const date = new Date(initdate);
+// const formatEventDate = (initdate, inittime) => {
+//     const date = new Date(initdate);
 
-    //Split the time format from string first
-    const timeStr = timeToString(inittime);
-    const [time, ampm] = timeStr.split(' ');
-    const [hoursStr, minutesStr] = time.split(':');
-    let hours = parseInt(hoursStr);
-    const minutes = parseInt(minutesStr);
+//     //Split the time format from string first
+//     const timeStr = timeToAMPMString(inittime);
+//     const [time, ampm] = timeStr.split(' ');
+//     const [hoursStr, minutesStr] = time.split(':');
+//     let hours = parseInt(hoursStr);
+//     const minutes = parseInt(minutesStr);
 
-    //Check for if PM
-    if (ampm === 'PM' && hours < 12) {
-        hours += 12;
-    } else if (ampm === 'AM' && hours === 12) {
-        hours = 0;
+//     //Check for if PM
+//     if (ampm === 'PM' && hours < 12) {
+//         hours += 12;
+//     } else if (ampm === 'AM' && hours === 12) {
+//         hours = 0;
+//     }
+
+//     date.setHours(hours);
+//     date.setMinutes(minutes);
+
+//     return dateToDateTimeString(date);
+// }
+
+//Checks for valid time frame, returns false if the time frame is clear
+const checkForTimeFrame = async (date, startTime, endTime) => {
+    try {
+        const newEventDate = moment(date).format('YYYY-MM-DD');
+        const newStartTime = timeTo24String(startTime);
+        const newEndTime = timeTo24String(endTime);
+        const q = query(scheduleRef, where("eventdate", "==", newEventDate))
+        const snapshot = (await getDocs(q));
+
+        let hasConflict = false;
+
+        snapshot.forEach((doc) => {
+            const existStartTime = doc.data().starttime;
+            const existEndTime = doc.data().endtime;
+
+            if (
+                (newStartTime >= existStartTime && newStartTime < existEndTime) ||  // new event starts during existing event
+                (newEndTime > existStartTime && newEndTime <= existEndTime) ||      // new event ends during existing event
+                (newStartTime <= existStartTime && newEndTime >= existEndTime)      // new event encompasses existing event
+            ) {
+                console.error('Error: Event time overlaps with an existing event');
+                hasConflict = true;
+            }
+        })
+
+        return hasConflict;
+    } catch (err) {
+        console.error('Error: ', err);
+        return false;
     }
-
-    date.setHours(hours);
-    date.setMinutes(minutes);
-
-    return dateToDateTimeString(date);
 }
 
 const createEvent = async () => {
     if (!testEmptyString(eventName) && !testEmptyString(eventDescription) && letterCheck()) {
-        const eventuid = uuid.v4();
-        const scheduleRef = await collection(db, 'schedule');
-        addDoc(scheduleRef, 
-            { 
-                volunteers: [],
-                eventcreationdate: dateToDateTimeString(currDate),
-                eventdatetime: formatEventDate(eventDate, eventTime),
-                eventdesc: eventDescription,
-                eventname: eventName,
-                eventuid: eventuid,
-            })
-            .then((doc) => {
-                //Clear states for each thing after successful creation back to default
-                setEventName('');
-                setEventDate(new Date());
-                setEventTime(new Date());
-                setEventDescription('');
-                closeEventModal();
-            })
-            .catch((err) => {
-                console.error('Error: ', err);
-            });
+        const timeFrameConflict = await checkForTimeFrame(eventDate, eventStartTime, eventEndTime);
+
+        if (!timeFrameConflict) {
+            console.log('Creating event');
+            const eventuid = uuid.v4();
+            addDoc(scheduleRef, 
+                { 
+                    volunteers: [],
+                    eventcreationdate: dateToDateTimeString(currDate),
+                    eventdate: dateToFormattedDateString(eventDate),
+                    starttime: timeTo24String(eventStartTime),
+                    endtime: timeTo24String(eventEndTime),
+                    desc: eventDescription,
+                    eventname: eventName,
+                    eventuid: eventuid,
+                })
+                .then((doc) => {
+                    //Clear states for each thing after successful creation back to default
+                    setEventName('');
+                    setEventDate(new Date());
+                    setEventStartTime(new Date());
+                    setEventEndTime(new Date());
+                    setEventDescription('');
+                    closeEventModal();
+                })
+                .catch((err) => {
+                    console.error('Error: ', err);
+                });
+        }
     } else {
         console.error('Something went wrong with initializing an event, empty input maybe?');
     }
@@ -382,6 +461,7 @@ const createEvent = async () => {
                                                 }}
                                             />
                                         )}
+                                        {/* IOS DATE PICKER */}
                                         {showDatePicker && Platform.OS === 'ios' && (
                                             <View
                                                 style={{
@@ -409,29 +489,31 @@ const createEvent = async () => {
                                             <TextInput 
                                                 mode='outlined'
                                                 label='Event Date'
-                                                value={dateToDateString(eventDate)}
+                                                value={dateToFormattedDateString(eventDate)}
                                                 editable={false}
                                                 onPressIn={toggleDatePicker}
                                                 style={{
                                                     height: 40,
-                                                    width: 139
+                                                    width: 115
                                                 }}
                                             />
                                         </Pressable>
 
-                                        {showTimePicker && (
+                                        {showStartTimePicker && (
                                             <RNDateTimePicker 
                                                 mode='time'
-                                                value={eventTime}
+                                                is24Hour={true}
+                                                value={eventStartTime}
                                                 display='spinner'
-                                                onChange={setTime}
+                                                onChange={setStartTime}
                                                 style={{
                                                     height: 120,
                                                     marginTop: -10
                                                 }}
                                             />
                                         )}
-                                        {showTimePicker && Platform.OS === 'ios' && (
+                                        {/* IOS START TIME PICKER */}
+                                        {showStartTimePicker && Platform.OS === 'ios' && (
                                             <View
                                                 style={{
                                                     flexDirection: 'row',
@@ -440,29 +522,78 @@ const createEvent = async () => {
                                             >
                                             <Button
                                                 mode='contained'
-                                                onPress={setTime}
+                                                onPress={setStartTime}
                                             >
                                                 Confirm
                                             </Button>    
                                             <Button
                                                 mode='outlined'
-                                                onPress={toggleTimePicker}
+                                                onPress={toggleStartTimePicker}
                                             >
                                                 Cancel
                                             </Button>
                                             </View>
                                         )}
                                         <Pressable
-                                            onPress={toggleTimePicker}
+                                            onPress={toggleStartTimePicker}
                                         >
                                             <TextInput 
                                                 mode='outlined'
-                                                label='Event Time'
-                                                value={timeToString(eventTime)}
+                                                label='Start'
+                                                value={timeTo24String(eventStartTime)}
                                                 editable={false}
                                                 style={{
                                                     height: 40,
-                                                    width: 139
+                                                    width: 75
+                                                }}
+                                            />
+                                        </Pressable>
+                                        {showEndTimePicker && (
+                                            <RNDateTimePicker 
+                                                mode='time'
+                                                is24Hour={true}
+                                                value={eventEndTime}
+                                                display='spinner'
+                                                onChange={setEndTime}
+                                                style={{
+                                                    height: 120,
+                                                    marginTop: -10
+                                                }}
+                                            />
+                                        )}
+                                        {/*IOS END TIME PICKER  */}
+                                        {showEndTimePicker && Platform.OS === 'ios' && (
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-around',
+                                                }}
+                                            >
+                                            <Button
+                                                mode='contained'
+                                                onPress={setEndTime}
+                                            >
+                                                Confirm
+                                            </Button>    
+                                            <Button
+                                                mode='outlined'
+                                                onPress={toggleEndTimePicker}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            </View>
+                                        )}
+                                        <Pressable
+                                            onPress={toggleEndTimePicker}
+                                        >
+                                            <TextInput 
+                                                mode='outlined'
+                                                label='End'
+                                                value={timeTo24String(eventEndTime)}
+                                                editable={false}
+                                                style={{
+                                                    height: 40,
+                                                    width: 75
                                                 }}
                                             />
                                         </Pressable>
@@ -637,7 +768,18 @@ const createEvent = async () => {
     );
 }
 
-const timeToString = (time) => {
+const formatted24TimeToDateObject = (time) => {
+    if (time) {
+        const formattedDate = time.split(':');
+        const dateObj = new Date();
+
+        dateObj.setHours(parseInt(formattedDate[0]), parseInt(formattedDate[1]), 0, 0)
+
+        return dateObj;
+    }
+}
+
+const timeToAMPMString = (time) => {
     const date = new Date(time);
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -648,14 +790,24 @@ const timeToString = (time) => {
     return `${formattedHours}:${formattedMinutes} ${amOrPm}`;
 }
 
-const dateToDateString = (time) => {
+const timeTo24String = (time) => {
     const date = new Date(time);
-    return date.toISOString().split('T')[0];
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    
+    return `${formattedHours}:${formattedMinutes}`;
 }
 
 const dateToDateTimeString = (time) => {
     const date = new Date(time);
     return moment(date).format('YYYY-MM-DD HH:mm');
+}
+
+const dateToFormattedDateString = (time) => {
+    const date = new Date(time);
+    return moment(date).format('YYYY-MM-DD');
 }
 
 const styles = StyleSheet.create({
