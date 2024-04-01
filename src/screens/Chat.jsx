@@ -12,7 +12,7 @@ import { GiftedChat} from 'react-native-gifted-chat';
 const Chat = ({ navigation, route }) => {
 
   const currUser = auth?.currentUser.uid;
-  const receiveUser = route.params?.chatId;
+  const receiveUser = route.params.uid;
 
   const [messages, setMessages] = useState([]);
 
@@ -25,7 +25,7 @@ const Chat = ({ navigation, route }) => {
 const getAllMsg = async () => {
 
   //chatid is hardcoded for now but will be passed in through props later
-    const chatid = "1111-8uFBAc4qy5TLQIjNho3TPPPI6hv1"
+    const chatid = receiveUser > currUser ? currUser+ "-" +receiveUser : receiveUser+ "-" +currUser
 
     //Pulls chat history from DB
     const q = query(collection(db, 'Chats', chatid,'messages'),orderBy('createdAt', "desc"));
@@ -48,7 +48,7 @@ const getAllMsg = async () => {
     }
     //Pulls from DB and adds the new message to the chat history
     setMessages(previousMessages => GiftedChat.append(previousMessages, userMsg))
-    const chatid = "1111-8uFBAc4qy5TLQIjNho3TPPPI6hv1"
+    const chatid = receiveUser > currUser ? currUser+ "-" +receiveUser : receiveUser+ "-" +currUser
     
     const docRef = collection(db, 'Chats', chatid,'messages');
     await addDoc(docRef,{...userMsg,createdAt:time});
