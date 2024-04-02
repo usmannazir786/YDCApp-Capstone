@@ -53,7 +53,6 @@ const Schedule = ({ navigation }) => {
     const [items, setItems] = useState([]);
     //Current date
     const [currDate, setCurrDate] = useState(new Date());
-    const [events, setEvents] = useState([]);
     //States for schedule button
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
     const [userRegister, setUserRegister] = useState(false);
@@ -67,8 +66,6 @@ const Schedule = ({ navigation }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
-    //Existing Dates in the Database
-    const [dates, setDates] = useState([]);
     //Regex Constants
     const letterSpacesAndNumRegex = /^[a-zA-Z\s0-9]*$/;
 
@@ -101,38 +98,35 @@ const Schedule = ({ navigation }) => {
 const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
     
 //Creates the days and renders them into an array to be used by Agenda THIS IS THE EVENT CREATION FOR NOW
-    const loadItems = (day) => {
+    const loadItems = () => {
         const items = items || {};
         
-        //Creates random items from 15 before and 85 days after the selected date
-        setTimeout(() => {
-          for (let i = -15; i < 85; i++) {
-            const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-            const strTime = timeToAMPMString(time);
-            
-            //If it doesn't exist already, initialize strTime property to an array
-            if (!items[strTime]) { // Keep this code line
-              items[strTime] = []; // Keep
-              
-              // Fills the contents of the array with random variables
-              const numItems = Math.floor(Math.random() * 3 + 1);
-              for (let j = 0; j < numItems; j++) {
-                items[strTime].push({ // Keep this code line
-                  name: 'Item for ' + strTime + ' #' + j,
-                  height: Math.max(50, Math.floor(Math.random() * 150)),
-                  day: strTime,
-                });                   // Keep until here
-              }
-            }
-          }
-          
-          //Iterates over the item array and replaces any new items placed in and updates the array
-          const newItems = {}; // Keep this code line
-          Object.keys(items).forEach(key => {
+        //Then load future data being added at real-time
+        onSnapshot(scheduleRef, (snapshot) => {
+            snapshot.docChanges().forEach(changes => {
+                const data = changes.doc.data();
+                const strTime = data.eventdate;
+                    if (changes.type === 'added') {
+                        if (!items[strTime]) { // Keep this code line
+                            items[strTime] = []; // Keep
+                        }
+                
+                        items[strTime].push({ // Keep this code line
+                            name: data.eventname,
+                            time: strTime,
+                            eventuid: data.eventuid,
+                            starttime: data.starttime,
+                            endtime: data.endtime,
+                        });
+                    } //Add more different change expressions
+            })
+
+            const newItems = {}; // Keep this code line
+            Object.keys(items).forEach(key => {
             newItems[key] = items[key];
-          });
-          setItems(newItems); // Keep this code line
-        }, 1000);
+            });
+            setItems(newItems); // Keep this code line
+        })
       };
 //////////////////////////////////////////////////
 
@@ -260,29 +254,6 @@ const letterCheck = () => {
     }
 }
 
-// const formatEventDate = (initdate, inittime) => {
-//     const date = new Date(initdate);
-
-//     //Split the time format from string first
-//     const timeStr = timeToAMPMString(inittime);
-//     const [time, ampm] = timeStr.split(' ');
-//     const [hoursStr, minutesStr] = time.split(':');
-//     let hours = parseInt(hoursStr);
-//     const minutes = parseInt(minutesStr);
-
-//     //Check for if PM
-//     if (ampm === 'PM' && hours < 12) {
-//         hours += 12;
-//     } else if (ampm === 'AM' && hours === 12) {
-//         hours = 0;
-//     }
-
-//     date.setHours(hours);
-//     date.setMinutes(minutes);
-
-//     return dateToDateTimeString(date);
-// }
-
 //Checks for valid time frame, returns false if the time frame is clear
 const checkForTimeFrame = async (date, startTime, endTime) => {
     try {
@@ -366,20 +337,20 @@ const createEvent = async () => {
 //////////////////////////////////////////////////
 
 //Renders the card in for the renderItem option
-      const renderItem = (items) => {
-
+      const renderItem = (item) => {
         return (
-        <TouchableOpacity onPress={() => {
-            setRegisterModalStatus(!registerModalStatus)
-        }}>
-            <Card>
-                <Card.Content>
-                    <View style={styles.card}>
-                        <Text>{items.name}</Text>
-                    </View>
-                </Card.Content>
-            </Card>
-        </TouchableOpacity>)
+            <TouchableOpacity onPress={() => {
+                setRegisterModalStatus(!registerModalStatus)
+            }}>
+                <Card>
+                    <Card.Content>
+                        <View style={styles.card}>
+                            <Text>{item.name}</Text>
+                        </View>
+                    </Card.Content>
+                </Card>
+            </TouchableOpacity>
+          );
       }
 
     return (
