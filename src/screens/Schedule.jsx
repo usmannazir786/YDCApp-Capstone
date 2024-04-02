@@ -70,7 +70,7 @@ const Schedule = ({ navigation }) => {
     //Existing Dates in the Database
     const [dates, setDates] = useState([]);
     //Regex Constants
-    const letterAndSpacesRegex = /^[a-zA-Z\s]+$/;
+    const letterSpacesAndNumRegex = /^[a-zA-Z\s0-9]*$/;
 
     let loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus congue eu lacus et pretium. Nunc a arcu non sem porttitor faucibus ornare sed orci. Maecenas efficitur libero et diam venenatis, id scelerisque neque lobortis. Nunc ac auctor orci. Praesent viverra placerat ullamcorper. Fusce vitae tempor augue. Ut nibh lorem, ullamcorper nec tempus ac, accumsan at sem. Sed vel nulla fermentum, aliquet elit sed, commodo diam. Praesent dignissim turpis in mauris luctus, in vulputate ligula accumsan. Duis augue arcu, lobortis ac ultricies quis, pharetra quis ante. Nulla sit amet metus non leo pretium mollis. Suspendisse volutpat tortor a lectus facilisis congue. Vestibulum eleifend vel augue id tempor. Quisque tincidunt urna quis arcu eleifend, a tempor ipsum bibendum. Suspendisse eu nisi sit amet tellus dapibus molestie. Suspendisse tellus magna, aliquam non faucibus eu, bibendum vel mi.';
     
@@ -98,7 +98,7 @@ const Schedule = ({ navigation }) => {
 //////////////////////////////////////////////////
 
 //Format the current date to the proper format to be intaked by Agenda
-const formatDate = moment(currDate).format('YYYY-MM-DD');
+const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
     
 //Creates the days and renders them into an array to be used by Agenda THIS IS THE EVENT CREATION FOR NOW
     const loadItems = (day) => {
@@ -253,7 +253,7 @@ const testEmptyString = (string) => {
 }
 
 const letterCheck = () => {
-    if (letterAndSpacesRegex.test(eventName) && letterAndSpacesRegex.test(eventDescription)) {
+    if (letterSpacesAndNumRegex.test(eventName) && letterSpacesAndNumRegex.test(eventDescription)) {
         return true;
     } else {
         return false;
@@ -389,7 +389,7 @@ const createEvent = async () => {
             <Agenda
                 items={items}
                 loadItemsForMonth={loadItems}
-                selected={formatDate}
+                selected={formatCurrDate}
                 renderItem={renderItem}
                 showOnlySelectedDayItems={true}
             />
