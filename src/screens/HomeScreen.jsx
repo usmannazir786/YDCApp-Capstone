@@ -16,7 +16,7 @@ function Home({ navigation }) {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        console.log('User: ', email, ' is logging out');
+        console.log('User: ', userEmail, ' is logging out');
         navigation.dispatch(StackActions.pop(1))
       })
       .catch((err) => {
