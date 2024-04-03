@@ -28,7 +28,7 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, onSnapshot, query, where, arrayUnion, updateDoc, doc } from 'firebase/firestore';
 
 /*
     Import for navigation around
@@ -47,6 +47,7 @@ const Schedule = ({ navigation }) => {
     const route = useRoute();
     const userEmail = route.params.userEmail;
     const userRole = route.params.userRole;
+    const userUID = route.params.userUID;
     //Databse references
     const scheduleRef = collection(db, 'schedule');
     //Items for card
@@ -58,6 +59,7 @@ const Schedule = ({ navigation }) => {
     const [userRegister, setUserRegister] = useState(false);
     //States for admin event creation
     const [eventModalStatus, setEventModalStatus] = useState(false);
+    const [eventUid, setEventUid] = useState('');
     const [eventName, setEventName] = useState('');
     const [eventDate, setEventDate] = useState(new Date());
     const [eventStartTime, setEventStartTime] = useState(new Date());
@@ -99,8 +101,6 @@ const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
     
 //Creates the days and renders them into an array to be used by Agenda THIS IS THE EVENT CREATION FOR NOW
     const loadItems = () => {
-        const items = items || {};
-        
         //Then load future data being added at real-time
         onSnapshot(scheduleRef, (snapshot) => {
             snapshot.docChanges().forEach(changes => {
@@ -117,7 +117,12 @@ const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
                             eventuid: data.eventuid,
                             starttime: data.starttime,
                             endtime: data.endtime,
+                            docid: changes.doc.get()
                         });
+                    } else if (changes.type === 'modified') {
+
+                    } else if (changes.type === 'removed') {
+
                     } //Add more different change expressions
             })
 
@@ -131,15 +136,44 @@ const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
 //////////////////////////////////////////////////
 
 //Tester function to check if it sends into the database will use this for when the user actually registers themselves in
-      const test = async () => {
-        const itemsRef = collection(db, 'schedule');
-        const docRef = await addDoc(itemsRef, 
-            { 
-                name: "works",
-                state: "registered",
-            });
+      const volunteerReg = async () => {
+        let data;
+        const userRef = collection(db, 'users');
+        const q1 = query(userRef, where("uid", "==", userUID));
+        const q2 = query(scheduleRef, where("eventuid", "==", eventUid));
 
-        closeModal();
+        await getDocs(q1)
+            .then((snap) => {
+                snap.docs.forEach(doc => {
+                    data = doc.data();
+                })
+            })
+            .catch(err => {
+                console.error('Error: ', err);
+            })
+
+        await getDocs(q2)
+            .then(snapshot => {
+                snapshot.forEach(document => {
+                    const currDocRef = doc(db, 'schedule', document.id);
+                    updateDoc(currDocRef, {
+                        volunteers: arrayUnion({
+                            email: data.email,
+                            firstname: data.firstname,
+                            lastname: data.lastname,
+                            role: data.role,
+                            uid: data.uid
+                        })
+                    })
+                    .then(() => {
+                        console.log('Successful creation')
+                    })
+                    .catch(err => {
+                        console.log('Error: ', err);
+                    })
+                })
+            })
+        setRegisterModalStatus(!registerModalStatus);
       }
 //////////////////////////////////////////////////
 
@@ -328,20 +362,20 @@ const createEvent = async () => {
       onSnapshot(scheduleRef, (snapshot) => {
         const scheduleDocs = snapshot.docs;
 
-        if (scheduleDocs.length > 0) {
-            setUserRegister(true)
-        } else {
-            setUserRegister(false)
-        }
       });
 //////////////////////////////////////////////////
 
 //Renders the card in for the renderItem option
       const renderItem = (item) => {
+        const itemEventUid = item.eventuid;
+
+        const handleItemModal = (eventUid) => {
+            setEventUid(eventUid);
+            setRegisterModalStatus(!registerModalStatus);
+        }
+
         return (
-            <TouchableOpacity onPress={() => {
-                setRegisterModalStatus(!registerModalStatus)
-            }}>
+            <TouchableOpacity onPress={() => handleItemModal(itemEventUid)}>
                 <Card>
                     <Card.Content>
                         <View style={styles.card}>
@@ -625,7 +659,7 @@ const createEvent = async () => {
                             backgroundColor: 'rgba(0,0,0,0.5)',
                             paddingTop: 60,
                             position: 'relative',
-                        }} onPress={test}>
+                        }}>
                             <View style={{
                                 backgroundColor: 'white',
                                 justifyContent: 'bottom',
@@ -687,7 +721,7 @@ const createEvent = async () => {
                                         left: 10,
                                         bottom: 10,
                                         backgroundColor: '#2196F3',
-                                    }]} onPress={test}>
+                                    }]} onPress={volunteerReg}>
                                         <Text style={{
                                             color: '#f0efed',
                                             fontSize: 15,
