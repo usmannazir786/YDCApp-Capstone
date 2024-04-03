@@ -358,11 +358,28 @@ const createEvent = async () => {
 
 //////////////////////////////////////////////////
 
-//Retrieve data from firebase
-      onSnapshot(scheduleRef, (snapshot) => {
-        const scheduleDocs = snapshot.docs;
+//Checking if user is registered in the event they clicked or not
+    useEffect(() => {
+        const q = query(scheduleRef, where("eventuid", "==", eventUid));
+        
+        getDocs(q)
+            .then(snapshot => {
+                snapshot.forEach(documents => {
+                    const currDocRef = doc(db, 'schedule', documents.id);
+                    onSnapshot(currDocRef, document => {
+                        if (document.exists()) {
+                            const volunteers = document.data().volunteers;
 
-      });
+                            volunteers.forEach((user) => {
+                                if (user.uid == userUID) {
+                                    setUserRegister(true);
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+    })
 //////////////////////////////////////////////////
 
 //Renders the card in for the renderItem option
