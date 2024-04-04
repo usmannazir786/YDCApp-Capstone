@@ -43,7 +43,7 @@ function Home({ navigation }) {
 
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Chat', { chatId: '1111' })}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
             <Text style={styles.title}>Chat</Text>
           </TouchableOpacity>
         </View>
