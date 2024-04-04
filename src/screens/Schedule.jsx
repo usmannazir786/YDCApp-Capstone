@@ -28,7 +28,7 @@ import moment from 'moment';
     Imports for the database end
 */
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, onSnapshot, query, where, arrayUnion, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, onSnapshot, query, where, arrayUnion, updateDoc, doc, documentId } from 'firebase/firestore';
 
 /*
     Import for navigation around
@@ -55,6 +55,7 @@ const Schedule = ({ navigation }) => {
     //Current date
     const [currDate, setCurrDate] = useState(new Date());
     //States for schedule button
+    const [containsUser, setContainsUser] = useState(false);
     const [registerModalStatus, setRegisterModalStatus] = useState(false);
     const [userRegister, setUserRegister] = useState(false);
     //States for admin event creation
@@ -68,6 +69,7 @@ const Schedule = ({ navigation }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+    const [test, setTest] = useState('');
     //Regex Constants
     const letterSpacesAndNumRegex = /^[a-zA-Z\s0-9]*$/;
 
@@ -117,13 +119,13 @@ const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
                             eventuid: data.eventuid,
                             starttime: data.starttime,
                             endtime: data.endtime,
-                            docid: changes.doc.get()
+                            docid: changes.doc.id
                         });
-                    } else if (changes.type === 'modified') {
+                    } //else if (changes.type === 'modified') {
+                        
+                    // } else if (changes.type === 'removed') {
 
-                    } else if (changes.type === 'removed') {
-
-                    } //Add more different change expressions
+                    // } //Add more different change expressions
             })
 
             const newItems = {}; // Keep this code line
@@ -156,17 +158,22 @@ const formatCurrDate = moment(currDate).format('YYYY-MM-DD');
             .then(snapshot => {
                 snapshot.forEach(document => {
                     const currDocRef = doc(db, 'schedule', document.id);
-                    updateDoc(currDocRef, {
-                        volunteers: arrayUnion({
+                    const existingVolunteers = document.data().volunteers || [];
+                    const newVolunteers = [
+                        ...existingVolunteers,
+                        {
                             email: data.email,
                             firstname: data.firstname,
                             lastname: data.lastname,
                             role: data.role,
                             uid: data.uid
-                        })
+                        }
+                    ]
+                    updateDoc(currDocRef, {
+                        volunteers: newVolunteers,
                     })
                     .then(() => {
-                        console.log('Successful creation')
+                        console.log('Successful registration')
                     })
                     .catch(err => {
                         console.log('Error: ', err);
@@ -359,10 +366,25 @@ const createEvent = async () => {
 //////////////////////////////////////////////////
 
 //Retrieve data from firebase
-      onSnapshot(scheduleRef, (snapshot) => {
-        const scheduleDocs = snapshot.docs;
+    useEffect(() => {
+        const q = query(scheduleRef, where('eventuid', '==', eventUid));
+        onSnapshot(q, (snapshot) => {
+            if (!snapshot.empty) {
+                snapshot.forEach((doc) => {
+                    const volunteers = doc.data().volunteers;
+                    if (volunteers) {
+                        volunteers.forEach(volunteer => {
+                            setContainsUser(volunteer.uid === userUID);
+                        })
+                    } else if (volunteers.length === 0) {
+                        setContainsUser(false);
+                    }
+                })
+            }
+        })
 
-      });
+        setUserRegister(containsUser);
+    })
 //////////////////////////////////////////////////
 
 //Renders the card in for the renderItem option
