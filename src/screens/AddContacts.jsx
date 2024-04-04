@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig';
-import { ref, set } from 'firebase/database';
+import { addDoc, collection } from 'firebase/firestore'; // Import addDoc and collection from Firestore
 import { Button } from 'react-native-paper';
 
 export default function AddContacts() {
@@ -9,15 +9,21 @@ export default function AddContacts() {
     const [lastname, setLastName] = useState('');
     const [email, setEmail] = useState('');
 
-    const dataAddOn = () => {
-        set(ref(db, 'users/' + name), {
-            name: name,
-            lastname: lastname,
-            email: email
-        });
-        setName('');
-        setLastName('');
-        setEmail('');   
+    const dataAddOn = async () => {
+        try {
+            await addDoc(collection(db, 'users'), { // Use addDoc to add a document to the 'users' collection
+                name: name,
+                lastname: lastname,
+                email: email
+            });
+            console.log("Document added with name: ", name);
+            // Clear the form
+            setName('');
+            setLastName('');
+            setEmail('');
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
     }
 
     return (
@@ -51,20 +57,23 @@ export default function AddContacts() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
     header: {
         fontSize: 24,
         fontWeight: 'bold',
-        textAlign: 'center',
-        margin: 20
+        marginBottom: 20,
     },
     input: {
+        width: '80%',
+        padding: 15,
+        marginBottom: 20,
         borderWidth: 1,
-        borderColor: '#000',
-        margin: 10,
-        padding: 10,
-        fontSize: 20
-    }
+        borderColor: 'gray',
+        borderRadius: 5,
+    },
 });
+
+// The code snippet above is from the src/screens/AddContacts.jsx file.
