@@ -30,12 +30,16 @@ import { collection, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
 /*
     Import for navigation around
 */
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useRoute } from '@react-navigation/native';
 //import uuid from 'react-native-uuid';
 
 //Have unique id's for each card to tie to the events
 
 const Schedule = ({ navigation }) => {
+    //Route params from login
+    const route = useRoute();
+    const userEmail = route.params.userEmail;
+    const userRole = route.params.userRole;
     //Databse references
     const scheduleRef = collection(db, 'schedule');
     //Items for card
@@ -51,6 +55,8 @@ const Schedule = ({ navigation }) => {
     
 //Creating a new function that keeps checking for the current date
     useEffect(() => {
+        console.log(userEmail);
+        console.log(userRole);
         //Calculates time until midnight
         const now = new Date();
         const midnight = new Date();
@@ -70,6 +76,7 @@ const Schedule = ({ navigation }) => {
 
         return () => clearTimeout(timeoutId);
     }, []);
+//////////////////////////////////////////////////
 
 //Format the current date to the proper format to be intaked by Agenda
 const formatDate = moment(currDate).format('YYYY-MM-DD');
@@ -108,6 +115,7 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
           setItems(newItems);
         }, 1000);
       };
+//////////////////////////////////////////////////
 
 //Tester function to check if it sends into the database will use this for when the user actually registers themselves in
       const test = async () => {
@@ -120,11 +128,13 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
 
         closeModal();
       }
+//////////////////////////////////////////////////
 
 //Helper close function for modal
       const closeModal = () => {
         setRegisterModalStatus(false);
       }
+//////////////////////////////////////////////////
 
 //Retrieve data from firebase
       onSnapshot(scheduleRef, (snapshot) => {
@@ -136,30 +146,13 @@ const formatDate = moment(currDate).format('YYYY-MM-DD');
             setUserRegister(false)
         }
       });
-
-    // useEffect(() => {
-    //     const checkRegistration = async () => {
-    //         const scheduleSnap = await getDocs(scheduleRef);
-    //         const scheduleDocs = scheduleSnap.docs;
-    //         //setUserRegister(prevUserRegister => [...prevUserRegister, userRegister])
-            
-
-
-            
-    //         if (scheduleDocs.length > 0) {
-    //             setUserRegister(true)
-    //         } else {
-    //             setUserRegister(false)
-    //         }
-    //     }
-
-    //     checkRegistration();
-    // }, []);
+//////////////////////////////////////////////////
  
 //Renders the card in for the renderItem option
       const renderItem = (items) => {
 
-        return (<TouchableOpacity onPress={() => {
+        return (
+        <TouchableOpacity onPress={() => {
             setRegisterModalStatus(!registerModalStatus)
         }}>
             <Card>

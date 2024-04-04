@@ -14,7 +14,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
-import Contacts from './src/screens/Contacts';
+import ChatList from './src/screens/ChatList';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,8 +36,8 @@ const App = () => {
             <Stack.Screen name="Schedule" component={Schedule}/>
             <Stack.Screen name="Food" component={FoodInput}/>
             <Stack.Screen name="Chat" component={Chat}/>
-            <Stack.Screen name="Contacts" component={Contacts}/>
             <Stack.Screen name="Polling" component={Polling}/>
+            <Stack.Screen name="ChatList" component={ChatList}/>
 
           </Stack.Navigator>
         </NavigationContainer>

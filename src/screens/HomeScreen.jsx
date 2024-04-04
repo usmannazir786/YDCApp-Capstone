@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useRoute } from '@react-navigation/native';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../Firebase/firebaseConfig';
 
 
 
-function Home({ navigation, route }) {
-  const {email} = route.params;
+function Home({ navigation }) {
+  const route = useRoute();
+  
+  const userEmail = route.params.userEmail;
+  const userRole = route.params.userRole;
   
   const handleLogout = () => {
     signOut(auth)
@@ -26,7 +29,7 @@ function Home({ navigation, route }) {
       <View style={styles.buttonContainer}>
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule')}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole})}>
             <Text style={styles.title}>Scheduler</Text>
           </TouchableOpacity>
         </View>
@@ -39,7 +42,7 @@ function Home({ navigation, route }) {
 
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Chat', { chatId: '1111' })}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
             <Text style={styles.title}>Chat</Text>
           </TouchableOpacity>
         </View>

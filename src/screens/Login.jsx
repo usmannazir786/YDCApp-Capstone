@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Text } from 'react-native';
-import { firebase } from 'firebase/firestore';
 import { 
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth';
-import { auth } from '../../Firebase/firebaseConfig';
+import { auth, db } from '../../Firebase/firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput, Button } from 'react-native-paper';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 //Tie information only related to the user to its uuid
 
@@ -34,14 +33,33 @@ const Login = ({ navigation }) => {
       setErrorMessage('Invalid email or password input');
     } else {
       signInWithEmailAndPassword(auth, email, password)
-      .then(user => {
+      .then(userCred => {
         setErrorMessage(null);
-        console.log(user);
-        navigation.navigate('Youth Drop-In Center', {email});
+        const user = userCred.user;
+        const userUID = user.uid;
+        const userEmail = user.email;
+
+        //User Role check
+        const userRef = collection(db, 'users');
+        const q = query(userRef, where("uid", "==", user.uid));
+
+        getDocs(q)
+          .then((qSnapshot) => {
+            qSnapshot.forEach((doc) => {
+              
+              const userRole = doc.data().role;
+              //console.log(userRole)
+              navigation.navigate('Youth Drop-In Center', {userUID, userEmail, userRole});
+            })
+          })
+          .catch((error) => {
+            console.error('Error: ', error);
+          });
+        ///////////////////////////////////////////////////
       })
       .catch(error => {
         setErrorMessage(error.message);
-        console.log('Error when user trying to log in: ', error);
+        console.error('Error when user trying to log in: ', error);
       });
     }
 
