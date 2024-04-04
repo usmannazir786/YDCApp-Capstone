@@ -1,44 +1,14 @@
 
 import { Linking, Alert } from 'react-native';
  
-// Add dummy contacts for testing
-const dummyContacts = [
-    {
-        id: '1',
-        name: 'fardin',
-        phoneNumbers: [
-            {
-                number: '123-456-7890',
-            },
-        ],
-    },
-    {
-        id: '2',
-        name: 'mark',
-        phoneNumbers: [
-            {
-                number: '987-654-3210',
-            },
-        ],
-    },
-    {
-        id: '3',
-        name: 'jon',
-        phoneNumbers: [
-            {
-                number: '967-980-8885',
-            },
-        ],
-    },
-   
-];
+
  
 export const requestContactsPermission =
     async (setContacts, setFilteredContacts) => {
         try {
             const { status } =
                 await Contacts.requestPermissionsAsync();
-            // Comment below two lines after testing the contacts
+            
             setContacts(dummyContacts);
             setFilteredContacts(dummyContacts);
  

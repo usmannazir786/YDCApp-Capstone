@@ -2,16 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {View, Text, FlatList, TouchableOpacity, TextInput, Pressable} from 'react-native';
 import { requestContactsPermission,makeCall, filterContacts} from './ContactsFunctions';
 
- 
 
-
-
-
-// add the function the where can add/delete contacts
-
-
-
-// add the function where can conect to the chat page 
 
 
 
