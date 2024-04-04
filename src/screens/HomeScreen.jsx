@@ -10,6 +10,7 @@ import { auth } from '../../Firebase/firebaseConfig';
 function Home({ navigation }) {
   const route = useRoute();
   
+  const userUID = route.params.userUID;
   const userEmail = route.params.userEmail;
   const userRole = route.params.userRole;
   
@@ -29,7 +30,7 @@ function Home({ navigation }) {
       <View style={styles.buttonContainer}>
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole})}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole, userUID})}>
             <Text style={styles.title}>Scheduler</Text>
           </TouchableOpacity>
         </View>
