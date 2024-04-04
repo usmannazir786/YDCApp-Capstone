@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { db } from '../../Firebase/firebaseConfig';
-import { addDoc, collection } from 'firebase/firestore'; // Import addDoc and collection from Firestore
+import { addDoc, collection } from 'firebase/firestore'; 
 import { Button } from 'react-native-paper';
 
 export default function AddContacts() {
-    const [name, setName] = useState('');
+    const [firstname, setfirstName] = useState('');
     const [lastname, setLastName] = useState('');
     const [email, setEmail] = useState('');
+    const [phoneNumbers, setPhoneNumbers] = useState('');
 
     const dataAddOn = async () => {
         try {
-            await addDoc(collection(db, 'users'), { // Use addDoc to add a document to the 'users' collection
-                name: name,
+            await addDoc(collection(db, 'users'), { // Add a new document with a generated id.  The collection is 'users'   
+                firstnamename: firstname,
                 lastname: lastname,
-                email: email
+                email: email,
+                PhoneNumbers: phoneNumbers,
             });
-            console.log("Document added with name: ", name);
-            // Clear the form
-            setName('');
+            console.log("Document added with name: ", firstname);
+            
+            setfirstName('');
             setLastName('');
             setEmail('');
+            setPhoneNumbers('');    
         } catch (error) {
             console.error("Error adding document: ", error);
         }
@@ -30,9 +33,9 @@ export default function AddContacts() {
         <View style={styles.container}>
             <Text style={styles.header}>Add Contacts</Text>
             <TextInput
-                placeholder="Name"
-                value={name}
-                onChangeText={text => setName(text)}
+                placeholder="First Name"
+                value={firstname}
+                onChangeText={text => setfirstName(text)}
                 style={styles.input}
             />
             <TextInput
@@ -45,6 +48,12 @@ export default function AddContacts() {
                 placeholder="Email"
                 value={email}
                 onChangeText={text => setEmail(text)}
+                style={styles.input}
+            />
+            <TextInput
+                placeholder="Phone Number"
+                value={phoneNumbers}
+                onChangeText={text => setPhoneNumbers(text)}
                 style={styles.input}
             />
             <Button mode="contained" onPress={dataAddOn}>
