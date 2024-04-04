@@ -1,4 +1,4 @@
-import * as Contacts from 'expo-contacts';
+
 import { Linking, Alert } from 'react-native';
  
 // Add dummy contacts for testing
