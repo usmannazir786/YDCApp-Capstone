@@ -16,6 +16,7 @@ import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
 import Contacts from './src/screens/Contacts';
 import ChatList from './src/screens/ChatList';
+import AddContacts from './src/screens/AddContacts';
 
 
 
@@ -43,6 +44,7 @@ const App = () => {
             <Stack.Screen name="Polling" component={Polling}/>
             <Stack.Screen name="ChatList" component={ChatList}/>
             <Stack.Screen name="Contacts" component={Contacts}/>
+            <Stack.Screen name="AddContacts" component={AddContacts}/>
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
