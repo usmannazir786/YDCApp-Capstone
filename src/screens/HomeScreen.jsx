@@ -47,6 +47,12 @@ function Home({ navigation }) {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.buttonBlock}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Dashboard')}>
+            <Text style={styles.title}>Dashboard</Text>
+          </TouchableOpacity>
+        </View>
+
         <Button mode='outlined' onPress={handleLogout}>Logout</Button>
 
 
