@@ -16,7 +16,7 @@ function Home({ navigation }) {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        console.log('User: ', email, ' is logging out');
+        console.log('User: ', userEmail, ' is logging out');
         navigation.dispatch(StackActions.pop(1))
       })
       .catch((err) => {
@@ -44,6 +44,12 @@ function Home({ navigation }) {
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
             <Text style={styles.title}>Chat</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.buttonBlock}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Dashboard')}>
+            <Text style={styles.title}>Dashboard</Text>
           </TouchableOpacity>
         </View>
 

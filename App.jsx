@@ -9,12 +9,14 @@ import FoodInput from './src/screens/Food';
 import HomePage from './src/screens/HomeScreen';
 import Chat from './src/screens/Chat';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
 import ChatList from './src/screens/ChatList';
+import Dashboard from './src/screens/Dashboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +40,7 @@ const App = () => {
             <Stack.Screen name="Chat" component={Chat}/>
             <Stack.Screen name="Polling" component={Polling}/>
             <Stack.Screen name="ChatList" component={ChatList}/>
+            <Stack.Screen name="Dashboard" component={Dashboard}/>
 
           </Stack.Navigator>
         </NavigationContainer>
