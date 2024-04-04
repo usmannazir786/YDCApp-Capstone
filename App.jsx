@@ -14,7 +14,11 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
+import Contacts from './src/screens/Contacts';
 import ChatList from './src/screens/ChatList';
+
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +42,7 @@ const App = () => {
             <Stack.Screen name="Chat" component={Chat}/>
             <Stack.Screen name="Polling" component={Polling}/>
             <Stack.Screen name="ChatList" component={ChatList}/>
-
+            <Stack.Screen name="Contacts" component={Contacts}/>
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
