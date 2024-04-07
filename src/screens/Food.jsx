@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
 import { db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc, getDocs, doc } from 'firebase/firestore';
-import { Button } from 'react-native-paper';
 import { StackActions } from '@react-navigation/native';
 
 const FoodInput = ({ navigation }) => {
-
- 
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
 
-    //Function to add food to the database
+    // Function to add food to the database
     const handleAddFood = async () => {
         try {
             const itemsRef = collection(db, 'food');
@@ -25,21 +22,23 @@ const FoodInput = ({ navigation }) => {
         }
     };
 
-    //Function to fetch food from the database
-    //Adapted from CPRG 306 Week 10 lab
-    
+    // Function to fetch food from the database
     useEffect(() => {
         const fetchFood = async () => {
-          const foodCollection = collection(db, 'food');
-          const foodSnapshot = await getDocs(foodCollection);
-          const foodList = foodSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
-          setFoodList(foodList);
+            const foodCollection = collection(db, 'food');
+            const foodSnapshot = await getDocs(foodCollection);
+            const foodList = foodSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            setFoodList(foodList);
         };
-    
+
         fetchFood();
-      }, []);
-    
-    
+    }, []);
+
+    // Function to clear the entered options
+    const clearOptions = () => {
+        setFoodList([]);
+    };
+
     return (
         <View style={styles.container}>
             <TextInput   
@@ -48,9 +47,9 @@ const FoodInput = ({ navigation }) => {
                 onChangeText={setFood}
             />
             <View style={styles.buttonBlock}>
-            <TouchableOpacity style={styles.button} onPress={handleAddFood}>
-            <Text>Enter Your Suggestion!</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={handleAddFood}>
+                    <Text>Enter Your Suggestion!</Text>
+                </TouchableOpacity>
             </View> 
             <FlatList
                 data={foodList}
@@ -60,29 +59,32 @@ const FoodInput = ({ navigation }) => {
                 )}
             />
             
+            <TouchableOpacity style={styles.clearButton} onPress={clearOptions}>
+                <Text style={styles.clearButtonText}>Clear Options</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
                 const recentOptions = foodList.slice(0, 3);
                 navigation.navigate('Polling', { recentOptions: recentOptions });
-                }}>
-            <Text style={styles.buttonText}>Polling</Text>
+            }}>
+                <Text style={styles.buttonText}>Polling</Text>
             </TouchableOpacity>
 
-            <Button mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
+            <TouchableOpacity style={styles.returnButton} onPress={() => navigation.dispatch(StackActions.pop(1))}>
+                <Text style={styles.returnButtonText}>Return</Text>
+            </TouchableOpacity>
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 50,
-      },
-    buttonContainer: {
-        marginTop: 20, 
-        alignSelf: 'center',
-      },
-      buttonBlock: {
+    },
+    buttonBlock: {
         marginBottom: 20,
         width: 200,
         height: 50,
@@ -92,19 +94,50 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,
-      },
-      buttonBlockTwo: {
-        marginBottom: 200,
-        marginTop: 40,
+    },
+    buttonBlockTwo: {
+        marginBottom: 20,
+        marginTop: 20,
         width: 250,
-        height: 100,
+        height: 50,
         borderRadius: 15,
         color: '#000000',
         backgroundColor: '#DDDDDD',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
-    }
+        padding: 5,
+    },
+    clearButton: {
+        marginBottom: 10,
+        marginTop: 10,
+        width: 150,
+        height: 40,
+        borderRadius: 15,
+        color: '#FFFFFF',
+        backgroundColor: '#FF0000',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+    },
+    clearButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+    },
+    returnButton: {
+        marginBottom: 20,
+        width: 150,
+        height: 40,
+        borderRadius: 15,
+        color: '#FFFFFF',
+        backgroundColor: '#0000FF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+    },
+    returnButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+    },
 });
 
 export default FoodInput;
