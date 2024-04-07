@@ -58,7 +58,7 @@ const ContactsScreen = () => {
                             flex: 1, height: 40,
                             borderColor: '#000000',
                             borderWidth: 1, marginRight: 10,
-                            paddingLeft: 10, color: '##000000'
+                            paddingLeft: 10, color: '#000000'
                         }
                     }
                     placeholder="Search"

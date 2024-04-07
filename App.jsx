@@ -15,7 +15,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import { PaperProvider } from 'react-native-paper';
 import Polling from './src/screens/components/Polling';
-import Contacts from './src/screens/Contacts';
+import ContactsScreen from './src/screens/ContactsScreen';
 import ChatList from './src/screens/ChatList';
 import AddContacts from './src/screens/AddContacts';
 import Dashboard from './src/screens/Dashboard';
@@ -42,7 +42,7 @@ const App = () => {
             <Stack.Screen name="Chat" component={Chat}/>
             <Stack.Screen name="Polling" component={Polling}/>
             <Stack.Screen name="ChatList" component={ChatList}/>
-            <Stack.Screen name="Contacts" component={Contacts}/>
+            <Stack.Screen name="ContactsScreen" component={ContactsScreen}/>
             <Stack.Screen name="AddContacts" component={AddContacts}/>
             <Stack.Screen name="Dashboard" component={Dashboard}/>
           </Stack.Navigator>

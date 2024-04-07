@@ -8,8 +8,6 @@ import { auth } from '../../Firebase/firebaseConfig';
 function Home() {
   const navigation = useNavigation();
   const route = useRoute();
-  const userEmail = route.params?.userEmail;
-  const userRole = route.params?.userRole;
   const userUID = route.params.userUID;
   const userEmail = route.params.userEmail;
   const userRole = route.params.userRole;
@@ -41,38 +39,12 @@ function Home() {
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ChatList')}>
           <Text style={styles.title}>Chat</Text>
         </TouchableOpacity>
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole, userUID})}>
-            <Text style={styles.title}>Scheduler</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
-            <Text style={styles.title}>Food Voting</Text>
-          </TouchableOpacity>
-        </View>
-
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
-            <Text style={styles.title}>Chat</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Dashboard')}>
-            <Text style={styles.title}>Dashboard</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Button mode='outlined' onPress={handleLogout}>Logout</Button>
 
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddContacts')}>
           <Text style={styles.title}>Add</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Contacts')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ContactsScreen')}>
           <Text style={styles.title}>Contacts</Text>
         </TouchableOpacity>
         

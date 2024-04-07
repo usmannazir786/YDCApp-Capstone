@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../Firebase/firebaseConfig';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal, TextInput } from 'react-native';
-import { Button, Card } from 'react-native-paper';
-
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../../Firebase/firebaseConfig'; 
+import { db } from '../../Firebase/firebaseConfig';
+import { Button, Card } from 'react-native-paper';
 
 function ChatList({ navigation }) {
     const [users, setUsers] = useState([]);
@@ -53,6 +48,7 @@ function ChatList({ navigation }) {
                 </TouchableOpacity>
             )}
         />
+    )
     const handleSelect = (user) => {
         navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
         setChattedUsers(prevUsers => [...prevUsers, user]);
