@@ -479,7 +479,7 @@ const createEvent = async () => {
                                         {showDatePicker && (
                                             <RNDateTimePicker 
                                                 mode='date'
-                                                value={eventDate}
+                                                value={currDate}
                                                 display='spinner'
                                                 onChange={setDate}
                                                 style={{
@@ -516,7 +516,7 @@ const createEvent = async () => {
                                             <TextInput 
                                                 mode='outlined'
                                                 label='Event Date'
-                                                value={dateToFormattedDateString(eventDate)}
+                                                value={dateToFormattedDateString(currDate)}
                                                 editable={false}
                                                 onPressIn={toggleDatePicker}
                                                 style={{
