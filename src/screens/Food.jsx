@@ -51,6 +51,15 @@ const FoodInput = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleAddFood}>
                 <Text style={styles.buttonText}>Enter Your Suggestion!</Text>
             </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
+    const recentOptions = foodList.slice(0, 3);
+    navigation.navigate('Polling', { recentOptions: recentOptions });
+}}>
+    <Text style={styles.buttonText}>Polling</Text>
+</TouchableOpacity>
+           
+            
             <FlatList
                 data={foodList}
                 keyExtractor={item => item.id}
@@ -60,6 +69,11 @@ const FoodInput = ({ navigation }) => {
                     </View>
                 )}
             />
+
+
+
+
+
             <TouchableOpacity style={styles.clearButton} onPress={clearOptions}>
                 <Text style={styles.clearButtonText}>Clear Options</Text>
             </TouchableOpacity>
@@ -71,24 +85,39 @@ const FoodInput = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    
+    buttonBlockTwo: {
+        backgroundColor: '#34D399', // A different color to make the button stand out
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 8,
+        alignSelf: 'center', // Center the button in the view
+        width: '90%', // Use a width that fits the screen
+    },
+    
+    
+    
     container: {
         flex: 1,
         alignItems: 'stretch',
-        backgroundColor: '#F9FAFB', // Soft background color
+        backgroundColor: '#F9FAFB', 
         padding: 16,
     },
     input: {
-        borderColor: '#D1D5DB', // Light grey border for input
+        borderColor: '#D1D5DB', 
         borderWidth: 1,
         borderRadius: 8,
         padding: 12,
         marginVertical: 8,
         marginHorizontal: 16,
-        backgroundColor: '#FFFFFF', // White background for the input
+        backgroundColor: '#FFFFFF', 
         fontSize: 16,
     },
     button: {
-        backgroundColor: '#10B981', // A fresh green color for the main action button
+        backgroundColor: '#10B981', 
         paddingVertical: 12,
         paddingHorizontal: 24,
         borderRadius: 8,
@@ -97,13 +126,12 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     buttonText: {
-        color: '#FFFFFF', // White text on the buttons for better contrast
-        fontWeight: '600', // Semi-bold text
+        color: '#FFFFFF', 
+        fontWeight: '600', 
         fontSize: 16,
     },
     clearButton: {
-        backgroundColor: '#EF4444', // Red color for clear and destructive actions
-        paddingVertical: 12,
+        backgroundColor: '#EF4444', 
         paddingHorizontal: 24,
         borderRadius: 8,
         alignItems: 'center',
@@ -116,21 +144,21 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     listItem: {
-        backgroundColor: '#E5E7EB', // Light grey background for list items
+        backgroundColor: '#E5E7EB',
         padding: 12,
         marginVertical: 8,
         borderRadius: 8,
-        flexDirection: 'row', // Arrange content in a row
-        alignItems: 'center', // Vertically center align
-        justifyContent: 'space-between', // Space out items in the list item
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
         marginHorizontal: 16,
     },
     listItemText: {
-        color: '#111827', // Very dark grey (almost black) for text
+        color: '#111827', 
         fontSize: 16,
     },
     returnButton: {
-        backgroundColor: '#3B82F6', // Blue color for secondary actions
+        backgroundColor: '#3B82F6', 
         paddingVertical: 12,
         paddingHorizontal: 24,
         borderRadius: 8,
