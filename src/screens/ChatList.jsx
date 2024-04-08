@@ -11,6 +11,12 @@ function ChatList({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState('');
 
+
+     // fardin abdul plz contect below email
+// usmanjoyia0304@gmail.com
+// i want to help you
+// react native developer
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {

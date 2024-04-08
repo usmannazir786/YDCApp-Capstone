@@ -13,7 +13,10 @@ function Home({ navigation }) {
   const userUID = route.params.userUID;
   const userEmail = route.params.userEmail;
   const userRole = route.params.userRole;
-  
+   // fardin abdul plz contect below email
+// usmanjoyia0304@gmail.com
+// i want to help you
+// react native developer
   const handleLogout = () => {
     signOut(auth)
       .then(() => {

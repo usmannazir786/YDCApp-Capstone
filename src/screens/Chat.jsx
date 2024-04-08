@@ -16,6 +16,10 @@ const Chat = ({ navigation, route }) => {
 
   const [messages, setMessages] = useState([]);
 
+   // fardin abdul plz contect below email
+// usmanjoyia0304@gmail.com
+// i want to help you
+// react native developer
 
   useEffect(() => { 
     getAllMsg()
