@@ -98,9 +98,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-  Container: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
   },
   card: {
     width: '100%',
@@ -161,6 +163,20 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  input: {
+    width: '80%',
+    padding: 15,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+},
+
+header: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginBottom: 20,
+},
 
 })
 
