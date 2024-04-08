@@ -5,10 +5,7 @@ import { StackActions, useRoute } from '@react-navigation/native';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../Firebase/firebaseConfig';
 
- // fardin abdul plz contect below email
-// usmanjoyia0304@gmail.com
-// i want to help you
-// react native developer
+
 
 function Home({ navigation }) {
   const route = useRoute();
