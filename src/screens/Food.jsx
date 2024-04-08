@@ -42,34 +42,27 @@ const FoodInput = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <TextInput   
+                style={styles.input}
                 placeholder="Enter food here"
                 value={food}
                 onChangeText={setFood}
+                placeholderTextColor="#6B7280" 
             />
-            <View style={styles.buttonBlock}>
-                <TouchableOpacity style={styles.button} onPress={handleAddFood}>
-                    <Text>Enter Your Suggestion!</Text>
-                </TouchableOpacity>
-            </View> 
+            <TouchableOpacity style={styles.button} onPress={handleAddFood}>
+                <Text style={styles.buttonText}>Enter Your Suggestion!</Text>
+            </TouchableOpacity>
             <FlatList
                 data={foodList}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <Text>{item.name}</Text>
+                    <View style={styles.listItem}>
+                        <Text style={styles.listItemText}>{item.name}</Text>
+                    </View>
                 )}
             />
-            
             <TouchableOpacity style={styles.clearButton} onPress={clearOptions}>
                 <Text style={styles.clearButtonText}>Clear Options</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
-                const recentOptions = foodList.slice(0, 3);
-                navigation.navigate('Polling', { recentOptions: recentOptions });
-            }}>
-                <Text style={styles.buttonText}>Polling</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity style={styles.returnButton} onPress={() => navigation.dispatch(StackActions.pop(1))}>
                 <Text style={styles.returnButtonText}>Return</Text>
             </TouchableOpacity>
@@ -80,62 +73,74 @@ const FoodInput = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 50,
+        alignItems: 'stretch',
+        backgroundColor: '#F9FAFB', // Soft background color
+        padding: 16,
     },
-    buttonBlock: {
-        marginBottom: 20,
-        width: 200,
-        height: 50,
-        borderRadius: 15,
-        color: '#000000',
-        backgroundColor: '#DDDDDD',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
+    input: {
+        borderColor: '#D1D5DB', // Light grey border for input
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        backgroundColor: '#FFFFFF', // White background for the input
+        fontSize: 16,
     },
-    buttonBlockTwo: {
-        marginBottom: 20,
-        marginTop: 20,
-        width: 250,
-        height: 50,
-        borderRadius: 15,
-        color: '#000000',
-        backgroundColor: '#DDDDDD',
-        justifyContent: 'center',
+    button: {
+        backgroundColor: '#10B981', // A fresh green color for the main action button
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
         alignItems: 'center',
-        padding: 5,
+        justifyContent: 'center',
+        marginVertical: 8,
+    },
+    buttonText: {
+        color: '#FFFFFF', // White text on the buttons for better contrast
+        fontWeight: '600', // Semi-bold text
+        fontSize: 16,
     },
     clearButton: {
-        marginBottom: 10,
-        marginTop: 10,
-        width: 150,
-        height: 40,
-        borderRadius: 15,
-        color: '#FFFFFF',
-        backgroundColor: '#FF0000',
-        justifyContent: 'center',
+        backgroundColor: '#EF4444', // Red color for clear and destructive actions
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
         alignItems: 'center',
-        padding: 5,
+        justifyContent: 'center',
+        marginVertical: 8,
     },
     clearButtonText: {
         color: '#FFFFFF',
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    listItem: {
+        backgroundColor: '#E5E7EB', // Light grey background for list items
+        padding: 12,
+        marginVertical: 8,
+        borderRadius: 8,
+        flexDirection: 'row', // Arrange content in a row
+        alignItems: 'center', // Vertically center align
+        justifyContent: 'space-between', // Space out items in the list item
+        marginHorizontal: 16,
+    },
+    listItemText: {
+        color: '#111827', // Very dark grey (almost black) for text
         fontSize: 16,
     },
     returnButton: {
-        marginBottom: 20,
-        width: 150,
-        height: 40,
-        borderRadius: 15,
-        color: '#FFFFFF',
-        backgroundColor: '#0000FF',
-        justifyContent: 'center',
+        backgroundColor: '#3B82F6', // Blue color for secondary actions
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
         alignItems: 'center',
-        padding: 5,
+        justifyContent: 'center',
+        marginVertical: 8,
     },
     returnButtonText: {
         color: '#FFFFFF',
+        fontWeight: '600',
         fontSize: 16,
     },
 });
