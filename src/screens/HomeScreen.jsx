@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
+    backgroundColor: '#1170ff', 
   },
   title: {
     fontSize: 20, // Reduced font size
@@ -80,7 +81,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutButton: {
-    marginTop: 10, // Adjusted spacing for logout button
+    marginTop: 10,
+    backgroundColor: '#DDDDDD',
   }
 });
 
